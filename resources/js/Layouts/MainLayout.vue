@@ -11,7 +11,11 @@
                     :to="link.path"
                 >
                     <v-list-item
-                        :prepend-icon="link.icon"
+                        :prepend-icon="
+                            this.$route.name === link.path.name
+                                ? link.iconSelect
+                                : link.icon
+                        "
                         :title="link.title"
                         :value="link.value"
                     ></v-list-item>
@@ -34,12 +38,20 @@
                 >
             </v-btn>
 
-            <v-btn icon="">
-                <v-icon>mdi-cog-outline</v-icon>
-                <v-tooltip location="bottom" activator="parent"
-                    >Settings</v-tooltip
-                >
-            </v-btn>
+            <router-link :to="{ name: 'settings' }">
+                <v-btn icon="">
+                    <v-icon
+                        :icon="
+                            this.$route.name === 'settings'
+                                ? 'mdi-cog'
+                                : ' mdi-cog-outline'
+                        "
+                    ></v-icon>
+                    <v-tooltip location="bottom" activator="parent"
+                        >Settings</v-tooltip
+                    >
+                </v-btn>
+            </router-link>
 
             <template #append>
                 <v-divider vertical class="mx-5"></v-divider>
@@ -51,7 +63,17 @@
 
         <v-main class="background">
             <v-container>
-                <router-view></router-view>
+                <router-view v-slot="{ Component }">
+                    <template v-if="Component">
+                        <Suspense timeout="0">
+                            <component :is="Component" />
+
+                            <template v-slot:fallback>
+                                <Spinner />
+                            </template>
+                        </Suspense>
+                    </template>
+                </router-view>
             </v-container>
         </v-main>
     </v-app>
@@ -66,6 +88,11 @@ import Spinner from "@/components/Spinner.vue";
 export default {
     data: () => ({ drawer: null, navLinkData }),
     components: { ProfileMenu, Department, Spinner },
+    watch: {
+        $route() {
+            console.log(this.$route);
+        },
+    },
 };
 </script>
 

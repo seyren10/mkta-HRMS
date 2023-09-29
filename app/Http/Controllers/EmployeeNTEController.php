@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\EmployeeNTE;
+use App\Models\EmployeeNte;
 use Illuminate\Http\Request;
 
 class EmployeeNTEController extends Controller
@@ -34,7 +34,7 @@ class EmployeeNTEController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(EmployeeNTE $employeeNTE)
+    public function show(EmployeeNte $employeeNTE)
     {
         //
     }
@@ -42,7 +42,7 @@ class EmployeeNTEController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(EmployeeNTE $employeeNTE)
+    public function edit(EmployeeNte $employeeNTE)
     {
         //
     }
@@ -50,7 +50,7 @@ class EmployeeNTEController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, EmployeeNTE $employeeNTE)
+    public function update(Request $request, EmployeeNte $employeeNTE)
     {
         //
     }
@@ -58,7 +58,7 @@ class EmployeeNTEController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(EmployeeNTE $employeeNTE)
+    public function destroy(EmployeeNte $employeeNTE)
     {
         //
     }

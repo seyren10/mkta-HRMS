@@ -13,3 +13,29 @@ a {
     text-decoration: none;
     color: currentColor;
 }
+
+.row {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: auto;
+}
+
+@media screen and (min-width: 40em) {
+    .row {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.data-table-row {
+    display: table-row;
+}
+.data-table-row > td {
+    padding-block: 1rem;
+    border-bottom: 1px solid rgb(233, 233, 233);
+}
+.data-table-row > td:first-of-type {
+    padding-left: 1rem;
+}
+.data-table-row:hover {
+    background-color: #e3f2fd;
+}

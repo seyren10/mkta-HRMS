@@ -29,6 +29,17 @@ const routes = [
                 name: "contract",
                 component: () => import("@/Pages/Contract/Index.vue"),
             },
+
+            {
+                path: "settings",
+                name: "settings",
+                component: () => import("@/Pages/Settings/Index.vue"),
+            },
+            {
+                path: ":showable+/:id/show",
+                name: "show",
+                component: () => import("@/components/Show.vue"),
+            },
         ],
     },
     {

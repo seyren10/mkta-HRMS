@@ -21,6 +21,7 @@ const vuetify = createVuetify({
                     primary: "#42A5F5",
                     secondary: "#546E7A",
                     accent: "#82B1FF",
+                    "accent-light": "#E3F2FD",
                     background: "#EEEEEE",
                 },
             },
@@ -35,7 +36,7 @@ pinia.use(({ store }) => {
         const loading = ref(false);
         store.$state.loading = loading;
     }
-    store.errors = toRef(store.$state, "errors");
+    store.loading = toRef(store.$state, "loading");
 });
 pinia.use(({ store }) => {
     if (!Object.prototype.hasOwnProperty(store.$state, "errors")) {

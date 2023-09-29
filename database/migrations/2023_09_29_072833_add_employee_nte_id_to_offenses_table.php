@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('offenses', function (Blueprint $table) {
-            $table->foreignIdFor(\App\Models\EmployeeNTE::class)->constrained('employee_ntes')->cascadeOnDelete()->cascadeOnDelete();
+            $table->foreignIdFor(\App\Models\EmployeeNte::class)->constrained('employee_ntes')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('offenses', function (Blueprint $table) {
-            $table->dropForeignIdFor(\App\Models\EmployeeNTE::class);
+            $table->dropForeignIdFor(\App\Models\EmployeeNte::class);
         });
     }
 };

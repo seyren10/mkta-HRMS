@@ -15,7 +15,6 @@ class Employee extends Model
         'last_name',
         'position',
         'hired_date',
-        'end_of_contract_date',
         'is_active',
         'department_id'
     ];

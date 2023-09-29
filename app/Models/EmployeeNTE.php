@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EmployeeNTE extends Model
+class EmployeeNte extends Model
 {
     use HasFactory;
 
@@ -15,8 +15,8 @@ class EmployeeNTE extends Model
     ];
 
 
-    public function offense()
+    public function offenses()
     {
-        return $this->hasOne(\App\Models\Offense::class);
+        return $this->hasMany(\App\Models\Offense::class);
     }
 }

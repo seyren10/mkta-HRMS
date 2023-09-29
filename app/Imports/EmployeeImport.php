@@ -30,7 +30,6 @@ class EmployeeImport implements ToModel, WithHeadingRow
             'first_name' => $row['GIVEN NAME'],
             'last_name' => $row['LAST NAME'],
             'position' => $row['POSITION'],
-            'end_of_contract_date' => $dateToday,
             'hired_date' => $dateToday,
             'is_active' => true,
             'department_id' => $department ? $department->id : 1

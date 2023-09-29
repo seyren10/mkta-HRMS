@@ -1,5 +1,5 @@
 <template>
-    <v-dialog width="500" persistent>
+    <v-dialog width="700" persistent>
         <template v-slot:activator="{ props }">
             <v-btn icon="" v-bind="props">
                 <v-icon>mdi-domain</v-icon>
@@ -111,12 +111,14 @@
                         <tr
                             v-for="department in sortedDepartments"
                             :key="department.id"
+                            class="hoverable"
                         >
                             <td>{{ department.title }}</td>
                             <td>{{ department.division }}</td>
                             <td>{{ department.description }}</td>
                             <td>
                                 <v-icon
+                                    class="edit"
                                     icon="mdi-pencil-outline"
                                     color="accent"
                                     @click="handleEdit(department)"
@@ -156,6 +158,11 @@ export default {
             sortedDepartments: this.departments,
             sortAscending: true,
         };
+    },
+    watch: {
+        departments(newValue) {
+            this.sortedDepartments = newValue;
+        },
     },
     methods: {
         create() {
@@ -216,5 +223,18 @@ i {
     grid-template-columns: repeat(3, 1fr) auto;
     margin-block: 1rem;
     padding-inline: 0.6rem;
+}
+
+.edit {
+    display: none;
+}
+.hoverable:hover .edit {
+    display: block;
+}
+
+@media screen and (max-width: 40em) {
+    .edit {
+        display: block;
+    }
 }
 </style>

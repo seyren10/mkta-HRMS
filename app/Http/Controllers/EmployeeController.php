@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\employee;
-use App\Http\Requests\StoreemployeeRequest;
-use App\Http\Requests\UpdateemployeeRequest;
+use App\Http\Resources\EmployeeResource;
+use App\Models\Employee;
+use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
 {
@@ -13,53 +13,59 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        //
+        return EmployeeResource::collection(Employee::orderBy('created_at', 'desc')->get());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function show(Employee $employee)
     {
-        //
+        return new EmployeeResource($employee);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreemployeeRequest $request)
+    public function store(Request $request)
     {
-        //
+        Employee::create([
+            ...$request->all(),
+            ...$request->validate([
+                'employee_id' => 'required',
+                'first_name' => 'required|string|max:20',
+                'last_name' => 'required|string|max:20',
+                'hired_date' => 'required|date',
+                'is_active' => 'required|boolean',
+                'department_id' => 'required|integer'
+            ]),
+        ]);
+
+        return response()->noContent();
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(employee $employee)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(employee $employee)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateemployeeRequest $request, employee $employee)
+    public function update(Request $request, Employee $employee)
     {
-        //
+        $employee->update([
+            ...$request->all(),
+            ...$request->validate([
+                'employee_id' => 'required',
+                'first_name' => 'required|string|max:20',
+                'last_name' => 'required|string|max:20',
+                'hired_date' => 'required|date',
+                'is_active' => 'required|boolean',
+                'department_id' => 'required|integer'
+            ]),
+        ]);
+
+        return response()->noContent();
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(employee $employee)
+    public function destroy(Employee $employee)
     {
         //
     }

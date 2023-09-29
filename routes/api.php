@@ -1,7 +1,8 @@
 <?php
 
 use App\Http\Controllers\DepartmentController;
-use App\Models\Department;
+use App\Http\Controllers\DisciplinaryMeasureController;
+use App\Http\Controllers\EmployeeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,3 +22,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::apiResource('department', DepartmentController::class);
+Route::apiResource('employee', EmployeeController::class);
+Route::apiResource('disciplinary-measure', DisciplinaryMeasureController::class);
