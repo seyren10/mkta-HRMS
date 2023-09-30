@@ -36,6 +36,24 @@ export const useDisciplinaryMeasureStore = defineStore("disciplinaryMeasure", {
                 this.loading = false;
             }
         },
+        async updateDisciplinaryMeasure() {
+            try {
+                this.loading = true;
+                await axios.put(
+                    `/api/disciplinary-measure/${this.form.id}`,
+                    this.form
+                );
+
+                this.errors = {};
+                await this.getDisciplinaryMeasures();
+                this.clearForm();
+            } catch (e) {
+                console.log(e);
+                this.errors = e.response.data.errors;
+            } finally {
+                this.loading = false;
+            }
+        },
         // async getEmployee(id) {
         //     try {
         //         this.loading = true;
@@ -48,24 +66,9 @@ export const useDisciplinaryMeasureStore = defineStore("disciplinaryMeasure", {
         //         this.loading = false;
         //     }
         // },
-
-        // async updateEmployee(data) {
-        //     try {
-        //         this.loading = true;
-        //         await axios.put(`/api/employee/${data.id}`, data);
-
-        //         this.errors = {};
-        //         await this.getEmployees();
-        //         await this.getEmployee(data.id);
-        //         this.clearForm();
-        //     } catch (e) {
-        //         console.log(e);
-        //         this.errors = e.response.data.errors;
-        //     } finally {
-        //         this.loading = false;
-        //     }
-        // },
-
+        setForm(data) {
+            this.form = data;
+        },
         clearForm() {
             this.form = {
                 title: null,

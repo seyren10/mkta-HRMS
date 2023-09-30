@@ -2,32 +2,31 @@
 
 namespace App\Console\Commands;
 
-use App\Imports\EmployeeImport;
+use App\Imports\DepartmentImport;
 use Illuminate\Console\Command;
 use Maatwebsite\Excel\Facades\Excel;
 
-class ImportEmployeeData extends Command
+class ImportDepartmentData extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'import:employee';
+    protected $signature = 'import:department';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Import data from Excel file to employee table (make sure to populate the departments table first) ';
+    protected $description = 'Import department data from Excel file to departments table ';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-
-        Excel::import(new EmployeeImport, public_path('ImportsExcel/employee.xlsx'));
+        Excel::import(new DepartmentImport, public_path('ImportsExcel/department.xlsx'));
     }
 }

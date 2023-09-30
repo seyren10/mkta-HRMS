@@ -5,6 +5,7 @@ namespace App\Imports;
 use Carbon\Carbon;
 use App\Models\Employee;
 use App\Models\Department;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
@@ -22,7 +23,7 @@ class EmployeeImport implements ToModel, WithHeadingRow
     {
 
         $dateToday = Carbon::now()->toDateString();
-        $department = Department::where('title', '=', $row['DEPARTMENT'])->first();
+        $department = Department::where('title', Str::lower($row['DEPARTMENT']))->first();
 
 
         return new Employee([

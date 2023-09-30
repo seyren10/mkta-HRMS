@@ -10,7 +10,7 @@
         </template>
 
         <template v-slot:default="{ isActive }">
-            <v-toolbar color="secondary" density="compact">
+            <v-toolbar color="primary" density="compact">
                 <v-toolbar-title>Departments</v-toolbar-title>
                 <v-toolbar-items>
                     <v-btn

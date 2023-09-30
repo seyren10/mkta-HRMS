@@ -23,7 +23,8 @@ class DisciplinaryMeasureController extends Controller
     public function store(Request $request)
     {
         DisciplinaryMeasure::create([
-            $request->validate(['title' => 'required'])
+            ...$request->all(),
+            ...$request->validate(['title' => 'required'])
         ]);
 
         return response()->noContent();
@@ -50,9 +51,9 @@ class DisciplinaryMeasureController extends Controller
      */
     public function update(Request $request, DisciplinaryMeasure $disciplinaryMeasure)
     {
-        $disciplinaryMeasure->update([
+        $disciplinaryMeasure->update(
             $request->validate(['title' => 'required'])
-        ]);
+        );
 
         return response()->noContent();
     }
