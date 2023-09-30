@@ -26,6 +26,7 @@
 
 <script>
 import DisciplinaryMeasures from "./TabContents/DisciplinaryMeasures.vue";
+import NteTypes from "./TabContents/NteTypes.vue";
 
 export default {
     data() {
@@ -38,11 +39,16 @@ export default {
                         title: "Disciplinary Measures",
                         component: "DisciplinaryMeasures",
                     },
+                    {
+                        icon: "mdi-format-list-checkbox",
+                        title: "NTE Types",
+                        component: "NteTypes",
+                    },
                 ],
             },
         };
     },
-    components: { DisciplinaryMeasures },
+    components: { DisciplinaryMeasures, NteTypes },
 };
 </script>
 

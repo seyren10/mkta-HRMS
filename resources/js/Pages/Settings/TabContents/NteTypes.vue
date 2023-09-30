@@ -7,7 +7,7 @@
             color="secondary"
             @click="showForm = true"
             v-if="!showForm"
-            >add NTE Types</v-btn
+            >add offense type</v-btn
         >
         <v-form
             class="form-single"
@@ -15,12 +15,21 @@
             v-if="showForm"
         >
             <v-text-field
-                v-model="form.title"
+                v-model="form.offense_type"
                 variant="underlined"
                 density="compact"
-                label="Title"
-                :error="errors?.title ? true : false"
-                :error-messages="errors?.title"
+                label="Type"
+                :error="errors?.offense_type ? true : false"
+                :error-messages="errors?.offense_type"
+                :loading="loading"
+            ></v-text-field>
+            <v-text-field
+                v-model="form.offense_length"
+                variant="underlined"
+                density="compact"
+                label="Offense Length (default is 5)"
+                :error="errors?.offense_length ? true : false"
+                :error-messages="errors?.offense_length"
                 :loading="loading"
             ></v-text-field>
             <v-btn
@@ -42,13 +51,14 @@
             />
         </v-form>
         <ul class="list mt-4">
-            <li
-                class="list-item"
-                v-for="disMeasure in disciplinaryMeasures"
-                :key="disMeasure.id"
-            >
-                <span>{{ disMeasure.title }}</span>
-                <v-icon class="edit" @click="handleEdit(disMeasure)"
+            <li class="list-item" v-for="nte in ntes" :key="nte.id">
+                <div class="list-item__content">
+                    <div>{{ nte.offense_type }}</div>
+                    <v-chip color="red" class="stages"
+                        >Stages: {{ nte.offense_length }}</v-chip
+                    >
+                </div>
+                <v-icon class="edit" @click="handleEdit(nte)"
                     >mdi-pencil-outline</v-icon
                 >
             </li>
@@ -57,20 +67,18 @@
 </template>
 
 <script>
-import { useDisciplinaryMeasureStore } from "@/stores/disciplinaryMeasureStore";
+import { useEmployeeNteStore } from "@/stores/employeeNteStore";
 import { storeToRefs } from "pinia";
 export default {
     async setup() {
-        const disciplinaryMeasureStore = useDisciplinaryMeasureStore();
-        await disciplinaryMeasureStore.getDisciplinaryMeasures();
+        const employeeNteStore = useEmployeeNteStore();
+        await employeeNteStore.getNtes();
 
-        const { disciplinaryMeasures, form, errors, loading } = storeToRefs(
-            disciplinaryMeasureStore
-        );
+        const { ntes, form, errors, loading } = storeToRefs(employeeNteStore);
 
         return {
-            disciplinaryMeasures,
-            disciplinaryMeasureStore,
+            ntes,
+            employeeNteStore,
             form,
             errors,
             loading,
@@ -84,22 +92,23 @@ export default {
     },
     methods: {
         async create() {
-            await this.disciplinaryMeasureStore.addDisciplinaryMeasure();
+            await this.employeeNteStore.addNte();
             if (!Object.keys(this.errors).length) this.closeForm();
         },
         async update() {
-            await this.disciplinaryMeasureStore.updateDisciplinaryMeasure();
+            await this.employeeNteStore.updateNte();
 
             if (!Object.keys(this.errors).length) this.closeForm();
         },
         handleEdit(data) {
-            this.disciplinaryMeasureStore.setForm(data);
+            this.employeeNteStore.setForm(data);
             this.isEditing = true;
             this.showForm = true;
         },
         closeForm() {
             this.isEditing = false;
             this.showForm = false;
+            this.employeeNteStore.clearForm();
         },
     },
 };
@@ -137,6 +146,14 @@ section {
     color: #42a5f5;
     display: flex;
     justify-content: space-between;
+}
+
+.list-item__content {
+    display: grid;
+
+    .stages {
+        align-self: end;
+    }
 }
 .edit {
     display: none !important;
