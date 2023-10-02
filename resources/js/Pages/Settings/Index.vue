@@ -1,4 +1,8 @@
 <template>
+    <h1 class="text-overline d-flex align-center mx-2 mb-2" style="gap: 0.3rem">
+        <v-icon>mdi-cog-outline</v-icon>
+        <p>Settings</p>
+    </h1>
     <v-card>
         <v-tabs v-model="tab.tab" color="primary">
             <v-tab
@@ -6,27 +10,20 @@
                 :value="index"
                 :key="index"
                 :prepend-icon="tab.icon"
+                :to="tab.link"
                 class="text-none"
                 >{{ tab.title }}</v-tab
             >
         </v-tabs>
-        <v-window v-model="tab.tab">
-            <v-window-item
-                v-for="(data, index) in tab.tabData"
-                :key="index"
-                :value="index"
-            >
-                <v-container>
-                    <component :is="data.component" />
-                </v-container>
-            </v-window-item>
-        </v-window>
+        <v-container>
+            <router-view></router-view>
+        </v-container>
     </v-card>
 </template>
 
 <script>
 import DisciplinaryMeasures from "./TabContents/DisciplinaryMeasures.vue";
-import NteTypes from "./TabContents/NteTypes.vue";
+import ViolationType from "./TabContents/ViolationType.vue";
 
 export default {
     data() {
@@ -37,18 +34,20 @@ export default {
                     {
                         icon: "mdi-shield-outline",
                         title: "Disciplinary Measures",
+                        link: { name: "disciplinaryMeasure" },
                         component: "DisciplinaryMeasures",
                     },
                     {
                         icon: "mdi-format-list-checkbox",
-                        title: "NTE Types",
-                        component: "NteTypes",
+                        title: "Violation Types",
+                        link: { name: "violationType" },
+                        component: "ViolationType",
                     },
                 ],
             },
         };
     },
-    components: { DisciplinaryMeasures, NteTypes },
+    components: { DisciplinaryMeasures, ViolationType },
 };
 </script>
 

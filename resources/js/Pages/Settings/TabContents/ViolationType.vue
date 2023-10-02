@@ -7,7 +7,7 @@
             color="secondary"
             @click="showForm = true"
             v-if="!showForm"
-            >add offense type</v-btn
+            >add violation type</v-btn
         >
         <v-form
             class="form-single"
@@ -15,21 +15,12 @@
             v-if="showForm"
         >
             <v-text-field
-                v-model="form.offense_type"
+                v-model="form.violation_type"
                 variant="underlined"
                 density="compact"
                 label="Type"
-                :error="errors?.offense_type ? true : false"
-                :error-messages="errors?.offense_type"
-                :loading="loading"
-            ></v-text-field>
-            <v-text-field
-                v-model="form.offense_length"
-                variant="underlined"
-                density="compact"
-                label="Offense Length (default is 5)"
-                :error="errors?.offense_length ? true : false"
-                :error-messages="errors?.offense_length"
+                :error="errors?.violation_type ? true : false"
+                :error-messages="errors?.violation_type"
                 :loading="loading"
             ></v-text-field>
             <v-btn
@@ -51,14 +42,15 @@
             />
         </v-form>
         <ul class="list mt-4">
-            <li class="list-item" v-for="nte in ntes" :key="nte.id">
+            <li
+                class="list-item"
+                v-for="violationType in violationTypes"
+                :key="violationType.id"
+            >
                 <div class="list-item__content">
-                    <div>{{ nte.offense_type }}</div>
-                    <v-chip color="red" class="stages"
-                        >Stages: {{ nte.offense_length }}</v-chip
-                    >
+                    <div>{{ violationType.violation_type }}</div>
                 </div>
-                <v-icon class="edit" @click="handleEdit(nte)"
+                <v-icon class="edit" @click="handleEdit(violationType)"
                     >mdi-pencil-outline</v-icon
                 >
             </li>
@@ -67,18 +59,19 @@
 </template>
 
 <script>
-import { useEmployeeNteStore } from "@/stores/employeeNteStore";
+import { useViolationTypeStore } from "@/stores/violationTypeStore";
 import { storeToRefs } from "pinia";
 export default {
     async setup() {
-        const employeeNteStore = useEmployeeNteStore();
-        await employeeNteStore.getNtes();
+        const violationTypeStore = useViolationTypeStore();
+        await violationTypeStore.getViolationTypes();
 
-        const { ntes, form, errors, loading } = storeToRefs(employeeNteStore);
+        const { violationTypes, form, errors, loading } =
+            storeToRefs(violationTypeStore);
 
         return {
-            ntes,
-            employeeNteStore,
+            violationTypes,
+            violationTypeStore,
             form,
             errors,
             loading,
@@ -92,23 +85,23 @@ export default {
     },
     methods: {
         async create() {
-            await this.employeeNteStore.addNte();
+            await this.violationTypeStore.addViolationType();
             if (!Object.keys(this.errors).length) this.closeForm();
         },
         async update() {
-            await this.employeeNteStore.updateNte();
+            await this.violationTypeStore.updateViolationType();
 
             if (!Object.keys(this.errors).length) this.closeForm();
         },
         handleEdit(data) {
-            this.employeeNteStore.setForm(data);
+            this.violationTypeStore.setForm(data);
             this.isEditing = true;
             this.showForm = true;
         },
         closeForm() {
             this.isEditing = false;
             this.showForm = false;
-            this.employeeNteStore.clearForm();
+            this.violationTypeStore.clearForm();
         },
     },
 };
@@ -150,9 +143,10 @@ section {
 
 .list-item__content {
     display: grid;
-
+    gap: 1.5rem;
     .stages {
         align-self: end;
+        justify-self: start;
     }
 }
 .edit {

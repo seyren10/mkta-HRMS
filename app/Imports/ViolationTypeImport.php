@@ -2,13 +2,13 @@
 
 namespace App\Imports;
 
-use App\Models\EmployeeNte;
+use App\Models\ViolationType;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 
 HeadingRowFormatter::default('none');
-class EmployeeNteImport implements ToModel, WithHeadingRow
+class ViolationTypeImport implements ToModel, WithHeadingRow
 {
     /**
      * @param array $row
@@ -17,8 +17,8 @@ class EmployeeNteImport implements ToModel, WithHeadingRow
      */
     public function model(array $row)
     {
-        return new EmployeeNte([
-            'offense_type' => $row['TYPES']
+        return new ViolationType([
+            'violation_type' => $row['TYPES']
         ]);
     }
 }

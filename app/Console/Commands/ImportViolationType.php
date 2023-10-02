@@ -2,25 +2,25 @@
 
 namespace App\Console\Commands;
 
-use App\Imports\EmployeeNteImport;
+use App\Imports\ViolationTypeImport;
 use Illuminate\Console\Command;
 use Maatwebsite\Excel\Facades\Excel;
 
-class ImportEmployeeNteData extends Command
+class ImportViolationType extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'import:employee-nte';
+    protected $signature = 'import:violation-type';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Import data from Excel file to employee-ntes table';
+    protected $description = 'Import data from Excel file to violation_types table';
 
 
     /**
@@ -28,6 +28,6 @@ class ImportEmployeeNteData extends Command
      */
     public function handle()
     {
-        Excel::import(new EmployeeNteImport, public_path('importsExcel/nte_types.xlsx'));
+        Excel::import(new ViolationTypeImport, public_path('importsExcel/violation_types.xlsx'));
     }
 }

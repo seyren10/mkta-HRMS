@@ -1,34 +1,33 @@
 import { defineStore } from "pinia";
 
-export const useEmployeeNteStore = defineStore("employeeNtes", {
+export const useViolationTypeStore = defineStore("violationTypes", {
     state() {
         return {
-            ntes: [],
+            violationTypes: [],
             form: {
-                offense_type: null,
-                offense_length: 5,
+                violation_type: null,
             },
         };
     },
     actions: {
-        async getNtes() {
+        async getViolationTypes() {
             try {
                 this.loading = true;
-                const res = await axios.get("/api/employee-nte");
-                this.ntes = res.data.data;
+                const res = await axios.get("/api/violation-type");
+                this.violationTypes = res.data.data;
             } catch (e) {
                 this.errors = e.response.data.errors;
             } finally {
                 this.loading = false;
             }
         },
-        async addNte() {
+        async addViolationType() {
             try {
                 this.loading = true;
-                await axios.post("/api/employee-nte", this.form);
+                await axios.post("/api/violation-type", this.form);
 
                 this.errors = {};
-                await this.getNtes();
+                await this.getViolationTypes();
                 this.clearForm();
             } catch (e) {
                 console.log(e);
@@ -37,13 +36,16 @@ export const useEmployeeNteStore = defineStore("employeeNtes", {
                 this.loading = false;
             }
         },
-        async updateNte() {
+        async updateViolationType() {
             try {
                 this.loading = true;
-                await axios.put(`/api/employee-nte/${this.form.id}`, this.form);
+                await axios.put(
+                    `/api/violation-type/${this.form.id}`,
+                    this.form
+                );
 
                 this.errors = {};
-                await this.getNtes();
+                await this.getViolationTypes();
                 this.clearForm();
             } catch (e) {
                 console.log(e);
@@ -58,8 +60,7 @@ export const useEmployeeNteStore = defineStore("employeeNtes", {
         },
         clearForm() {
             this.form = {
-                offense_type: null,
-                offense_length: null,
+                violation_type: null,
             };
         },
     },

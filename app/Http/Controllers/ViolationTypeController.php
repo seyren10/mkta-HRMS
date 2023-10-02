@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\EmployeeNteResource;
-use App\Models\EmployeeNte;
+use App\Http\Resources\ViolationResource;
+use App\Models\ViolationType;
 use Illuminate\Http\Request;
 
-class EmployeeNTEController extends Controller
+class ViolationTypeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return EmployeeNteResource::collection(EmployeeNte::orderBy('created_at', 'desc')->get());
+        return ViolationResource::collection(ViolationType::orderBy('created_at', 'desc')->get());
     }
 
 
@@ -23,11 +23,10 @@ class EmployeeNTEController extends Controller
      */
     public function store(Request $request)
     {
-        EmployeeNte::create([
+        ViolationType::create([
             ...$request->all(),
             ...$request->validate([
-                'offense_type' => 'required|max:255',
-                'offense_length' => 'required|integer|min:1|max:10',
+                'violation_type' => 'required|max:255',
 
             ])
         ]);
@@ -38,7 +37,7 @@ class EmployeeNTEController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(EmployeeNte $employeeNTE)
+    public function show(ViolationType $violationType)
     {
         //
     }
@@ -47,13 +46,12 @@ class EmployeeNTEController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, EmployeeNte $employeeNte)
+    public function update(Request $request, ViolationType $violationType)
     {
-        $employeeNte->update([
+        $violationType->update([
             ...$request->all(),
             ...$request->validate([
-                'offense_type' => 'required|max:255',
-                'offense_length' => 'required|integer|min:1|max:10',
+                'violation_type' => 'required|max:255',
             ])
         ]);
 
@@ -63,9 +61,9 @@ class EmployeeNTEController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(EmployeeNte $employeeNTE)
+    public function destroy(ViolationType $violationType)
     {
-        $employeeNTE->delete();
+        $violationType->delete();
         return response()->noContent();
     }
 }

@@ -80,33 +80,7 @@
 </template>
 
 <script>
-import { navLinkData } from "./navLinkData";
-import ProfileMenu from "./components/ProfileMenu.vue";
-import Department from "./components/Department.vue";
-import Spinner from "@/components/Spinner.vue";
-
-export default {
-    data: () => ({ drawer: null, navLinkData }),
-    components: { ProfileMenu, Department, Spinner },
-    watch: {
-        $route() {
-            console.log(this.$route.matched[1].name);
-        },
-    },
-};
+export default {};
 </script>
 
-<style scoped>
-.router-link-exact-active {
-    color: #42a5f5;
-}
-
-.actions {
-    display: flex;
-    gap: 1rem;
-}
-
-i {
-    color: #42a5f5;
-}
-</style>
+<style scoped></style>

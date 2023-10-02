@@ -33,7 +33,26 @@ const routes = [
             {
                 path: "settings",
                 name: "settings",
+                redirect: { name: "disciplinaryMeasure" },
                 component: () => import("@/Pages/Settings/Index.vue"),
+                children: [
+                    {
+                        path: "disciplinary-measure",
+                        name: "disciplinaryMeasure",
+                        component: () =>
+                            import(
+                                "@/Pages/Settings/TabContents/DisciplinaryMeasures.vue"
+                            ),
+                    },
+                    {
+                        path: "violation-type",
+                        name: "violationType",
+                        component: () =>
+                            import(
+                                "@/Pages/Settings/TabContents/ViolationType.vue"
+                            ),
+                    },
+                ],
             },
             {
                 path: ":showable+/:id/show",

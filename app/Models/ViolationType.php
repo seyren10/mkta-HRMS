@@ -5,17 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Offense extends Model
+class ViolationType extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'description',
-        'offense_level'
+        'violation_type',
     ];
 
-    public function employeeNte()
+
+    public function offenses()
     {
-        return $this->belongsTo(\App\Models\EmployeeNTE::class);
+        return $this->hasMany(\App\Models\Offense::class);
     }
 }
