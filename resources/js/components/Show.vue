@@ -1,5 +1,6 @@
 <script>
 import EmployeeShow from "@/Pages/Employees/Show.vue";
+import Heading from "./Heading.vue";
 export default {
     data() {
         return {
@@ -21,6 +22,7 @@ export default {
             this.showPageTitle = to?.at(0) || from.at(0);
         },
     },
+    components: { Heading },
 };
 </script>
 
@@ -34,7 +36,9 @@ export default {
                 size="small"
                 variant="text"
             ></v-btn>
-            <h1 class="proper text-h5">{{ showPageTitle }} information</h1>
+            <Heading icon="mdi-account-outline"
+                >{{ showPageTitle }} information</Heading
+            >
         </div>
         <component :is="getShowableComponent"></component>
     </v-container>

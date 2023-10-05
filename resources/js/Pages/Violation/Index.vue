@@ -1,5 +1,15 @@
 <template>
     <section>
+        <Heading icon="mdi-alert-octagon-outline">Violations</Heading>
+        <v-btn
+            size="small"
+            prepend-icon="mdi-format-list-checkbox"
+            class="ml-4 mt-4 text-none"
+            color="primary"
+            :to="{ name: 'violationType' }"
+            >Violation Types</v-btn
+        >
+
         <v-expansion-panels variant="popout" class="mt-3">
             <v-expansion-panel
                 v-for="violationType in violationTypes"
@@ -69,8 +79,9 @@ import { storeToRefs } from "pinia";
 import { useViolationStore } from "@/stores/violationStore";
 import { useViolationTypeStore } from "@/stores/violationTypeStore";
 
-import ViolationAdd from "./ViolationAdd.vue";
-import ViolationEdit from "./ViolationEdit.vue";
+import Create from "./Create.vue";
+import Edit from "./Edit.vue";
+import Heading from "@/components/Heading.vue";
 export default {
     async setup() {
         const violationStore = useViolationStore();
@@ -87,7 +98,7 @@ export default {
             errors,
         };
     },
-    components: { ViolationAdd, ViolationEdit },
+    components: { Create, Edit, Heading },
     data() {
         return {
             showForm: false,
@@ -99,11 +110,12 @@ export default {
             },
         };
     },
+
     methods: {
         handleAddViolation(violationType) {
             this.dialog = {
                 state: true,
-                component: "ViolationAdd",
+                component: "Create",
                 props: {
                     violationType,
                 },
@@ -112,7 +124,7 @@ export default {
         handleEditViolation(violationId, violationType) {
             this.dialog = {
                 state: true,
-                component: "ViolationEdit",
+                component: "Edit",
                 props: {
                     violationId,
                     violationType,

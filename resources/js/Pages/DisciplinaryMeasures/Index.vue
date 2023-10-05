@@ -1,64 +1,69 @@
 <template>
     <section>
-        <v-btn
-            block
-            prepend-icon="mdi-plus"
-            variant="flat"
-            color="secondary"
-            @click="showForm = true"
-            v-if="!showForm"
-            >add Disciplinary Measure</v-btn
-        >
-        <v-form
-            class="form-single"
-            @submit.prevent="isEditing ? update() : create()"
-            v-if="showForm"
-        >
-            <v-text-field
-                v-model="form.title"
-                variant="underlined"
-                density="compact"
-                label="Title"
-                :error="errors?.title ? true : false"
-                :error-messages="errors?.title"
-                :loading="loading"
-            ></v-text-field>
+        <Heading icon="mdi-shield-outline">Disciplinary Measures</Heading>
+        <v-sheet rounded elevation="1" class="pa-4 mt-4">
             <v-btn
-                type="submit"
+                block
+                prepend-icon="mdi-plus"
                 variant="flat"
-                :icon="isEditing ? 'mdi-check' : 'mdi-plus'"
-                color="primary"
-                rounded="0"
-                density="compact"
-                :loading="loading"
-            />
-            <v-btn
-                variant="outlined"
-                icon="mdi-close"
-                color="primary"
-                rounded="0"
-                density="compact"
-                @click="closeForm"
-            />
-        </v-form>
-        <ul class="list mt-4">
-            <li
-                class="list-item"
-                v-for="disMeasure in disciplinaryMeasures"
-                :key="disMeasure.id"
+                color="secondary"
+                @click="showForm = true"
+                v-if="!showForm"
+                >add Disciplinary Measure</v-btn
             >
-                <span>{{ disMeasure.title }}</span>
-                <v-icon class="edit" @click="handleEdit(disMeasure)"
-                    >mdi-pencil-outline</v-icon
+            <v-form
+                class="form-single"
+                @submit.prevent="isEditing ? update() : create()"
+                v-if="showForm"
+            >
+                <v-text-field
+                    v-model="form.title"
+                    variant="underlined"
+                    density="compact"
+                    label="Title"
+                    :error="errors?.title ? true : false"
+                    :error-messages="errors?.title"
+                    :loading="loading"
+                ></v-text-field>
+                <v-btn
+                    type="submit"
+                    variant="flat"
+                    :icon="isEditing ? 'mdi-check' : 'mdi-plus'"
+                    color="primary"
+                    rounded="0"
+                    density="compact"
+                    :loading="loading"
+                />
+                <v-btn
+                    variant="outlined"
+                    icon="mdi-close"
+                    color="primary"
+                    rounded="0"
+                    density="compact"
+                    @click="closeForm"
+                />
+            </v-form>
+            <ul class="list mt-4">
+                <li
+                    class="list-item"
+                    v-for="disMeasure in disciplinaryMeasures"
+                    :key="disMeasure.id"
                 >
-            </li>
-        </ul>
+                    <span>{{ disMeasure.title }}</span>
+                    <v-icon class="edit" @click="handleEdit(disMeasure)"
+                        >mdi-pencil-outline</v-icon
+                    >
+                </li>
+            </ul>
+        </v-sheet>
     </section>
 </template>
 
 <script>
 import { useDisciplinaryMeasureStore } from "@/stores/disciplinaryMeasureStore";
 import { storeToRefs } from "pinia";
+
+import Heading from "@/components/Heading.vue";
 export default {
     async setup() {
         const disciplinaryMeasureStore = useDisciplinaryMeasureStore();
@@ -75,6 +80,9 @@ export default {
             errors,
             loading,
         };
+    },
+    components: {
+        Heading,
     },
     data() {
         return {
@@ -111,22 +119,22 @@ export default {
     align-items: center;
     gap: 1rem;
 }
-section {
+/* section {
     width: 90%;
     margin-inline: auto;
 
     @media screen and (min-width: 40em) {
         width: 60%;
     }
-}
+} */
 
 .list {
     display: grid;
-    grid-template-columns: repeat(1fr);
+    grid-template-columns: 1fr;
     gap: 0.8rem;
 
     @media (min-width: 40rem) {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 

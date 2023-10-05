@@ -155,6 +155,8 @@ import { useEmployeeStore } from "@/stores/employeeStore";
 import { storeToRefs } from "pinia";
 
 import { useRoute } from "vue-router";
+
+import Heading from "@/components/Heading.vue";
 export default {
     async setup() {
         const route = useRoute();
@@ -174,6 +176,7 @@ export default {
             loading,
         };
     },
+    components: { Heading },
     data() {
         return {
             isEditing: false,

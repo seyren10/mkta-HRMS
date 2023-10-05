@@ -14,11 +14,18 @@ export const navLinkData = [
         iconSelect: "mdi-account-group",
     },
     {
-        path: { name: "nte" },
-        title: "NTEs",
-        value: "nte",
+        path: { name: "violation" },
+        title: "Violations",
+        value: "violation",
         icon: "mdi-alert-octagon-outline",
         iconSelect: "mdi-alert-octagon",
+    },
+    {
+        path: { name: "disciplinaryMeasure" },
+        title: "Disciplinary",
+        value: "disciplinaryMeasure",
+        icon: "mdi-shield-outline",
+        iconSelect: "mdi-shield",
     },
     {
         path: { name: "contract" },
