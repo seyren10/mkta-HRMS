@@ -16,16 +16,27 @@
             >
         </v-tabs>
         <v-container>
-            <router-view></router-view>
+            <router-view v-slot="{ Component }">
+                <template v-if="Component">
+                    <Suspense timeout="0">
+                        <component :is="Component" />
+
+                        <template v-slot:fallback>
+                            <Spinner />
+                        </template>
+                    </Suspense>
+                </template>
+            </router-view>
         </v-container>
     </v-card>
 </template>
 
 <script>
-import DisciplinaryMeasures from "./TabContents/DisciplinaryMeasures.vue";
-import ViolationType from "./TabContents/ViolationType.vue";
-
+import Spinner from "@/components/Spinner.vue";
 export default {
+    components: {
+        Spinner,
+    },
     data() {
         return {
             tab: {
@@ -35,19 +46,21 @@ export default {
                         icon: "mdi-shield-outline",
                         title: "Disciplinary Measures",
                         link: { name: "disciplinaryMeasure" },
-                        component: "DisciplinaryMeasures",
                     },
                     {
                         icon: "mdi-format-list-checkbox",
                         title: "Violation Types",
                         link: { name: "violationType" },
-                        component: "ViolationType",
+                    },
+                    {
+                        icon: "mdi-alert-decagram-outline",
+                        title: "Violations",
+                        link: { name: "violation" },
                     },
                 ],
             },
         };
     },
-    components: { DisciplinaryMeasures, ViolationType },
 };
 </script>
 

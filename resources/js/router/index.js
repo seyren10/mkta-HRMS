@@ -52,6 +52,14 @@ const routes = [
                                 "@/Pages/Settings/TabContents/ViolationType.vue"
                             ),
                     },
+                    {
+                        path: "violation",
+                        name: "violation",
+                        component: () =>
+                            import(
+                                "@/Pages/Settings/TabContents/Violation.vue"
+                            ),
+                    },
                 ],
             },
             {

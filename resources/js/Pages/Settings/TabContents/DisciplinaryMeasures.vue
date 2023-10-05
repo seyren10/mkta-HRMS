@@ -7,7 +7,7 @@
             color="secondary"
             @click="showForm = true"
             v-if="!showForm"
-            >add NTE Types</v-btn
+            >add Disciplinary Measure</v-btn
         >
         <v-form
             class="form-single"

@@ -1,37 +1,36 @@
 import { defineStore } from "pinia";
 
-export const useViolationTypeStore = defineStore("violationTypes", {
+export const useViolationStore = defineStore("violations", {
     state() {
         return {
-            violationTypes: [],
+            violations: [],
             form: {
-                violation_type: null,
+                description: null,
+                violation_type_id: null,
+                action_length: 5,
             },
         };
     },
     actions: {
-        async getViolationTypes() {
+        async getViolations() {
             try {
                 this.loading = true;
-                const res = await axios.get("/api/violation-type", {
-                    params: {
-                        includeViolations: true,
-                    },
-                });
-                this.violationTypes = res.data.data;
+                const res = await axios.get("/api/violation");
+
+                this.violations = res.data.data;
             } catch (e) {
                 this.errors = e.response.data.errors;
             } finally {
                 this.loading = false;
             }
         },
-        async addViolationType() {
+        async addViolation() {
             try {
                 this.loading = true;
-                await axios.post("/api/violation-type", this.form);
+                await axios.post("/api/violation", this.form);
 
                 this.errors = {};
-                await this.getViolationTypes();
+                await this.getViolations();
                 this.clearForm();
             } catch (e) {
                 console.log(e);
@@ -40,16 +39,13 @@ export const useViolationTypeStore = defineStore("violationTypes", {
                 this.loading = false;
             }
         },
-        async updateViolationType() {
+        async updateViolation() {
             try {
                 this.loading = true;
-                await axios.put(
-                    `/api/violation-type/${this.form.id}`,
-                    this.form
-                );
+                await axios.put(`/api/violation/${this.form.id}`, this.form);
 
                 this.errors = {};
-                await this.getViolationTypes();
+                await this.getViolations();
                 this.clearForm();
             } catch (e) {
                 console.log(e);
@@ -64,7 +60,9 @@ export const useViolationTypeStore = defineStore("violationTypes", {
         },
         clearForm() {
             this.form = {
-                violation_type: null,
+                description: null,
+                violation_type_id: null,
+                action_length: 5,
             };
             this.errors = {};
         },

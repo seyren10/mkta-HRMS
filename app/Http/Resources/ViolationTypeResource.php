@@ -4,10 +4,9 @@ namespace App\Http\Resources;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Http\Resources\ViolationTypeResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ViolationResource extends JsonResource
+class ViolationTypeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,10 +15,14 @@ class ViolationResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $data =  parent::toArray($request);
+        $data =  [
+            ...parent::toArray($request),
+            'violation_type' => Str::of($this->violation_type)->headline(),
 
-        if ($request->has('includeViolationType'))
-            $data['violationType']  = new ViolationTypeResource($this->violationType);
+        ];
+        if ($request->has('includeViolations')) {
+            $data['violations'] = ViolationResource::collection($this->violations);
+        }
 
         return $data;
     }

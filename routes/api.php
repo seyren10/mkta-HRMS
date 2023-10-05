@@ -3,6 +3,7 @@
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DisciplinaryMeasureController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\ViolationController;
 use App\Http\Controllers\ViolationTypeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,3 +27,4 @@ Route::apiResource('department', DepartmentController::class);
 Route::apiResource('employee', EmployeeController::class);
 Route::apiResource('disciplinary-measure', DisciplinaryMeasureController::class);
 Route::apiResource('violation-type', ViolationTypeController::class);
+Route::apiResource('violation', ViolationController::class);

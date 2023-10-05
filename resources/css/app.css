@@ -43,3 +43,17 @@ ul {
 .data-table-row:hover {
     background-color: #e3f2fd;
 }
+
+.d-grid {
+    display: grid;
+    height: 100%;
+}
+
+.chip {
+    justify-self: start;
+    margin-top: auto;
+    background-color: #e2e2e2;
+    border-radius: 0.5rem;
+    padding-inline: 0.5rem;
+    padding-block: 0.2rem;
+}

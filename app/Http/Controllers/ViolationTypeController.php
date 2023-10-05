@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ViolationResource;
+use App\Http\Resources\ViolationTypeResource;
 use App\Models\ViolationType;
 use Illuminate\Http\Request;
 
@@ -11,9 +11,10 @@ class ViolationTypeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return ViolationResource::collection(ViolationType::orderBy('created_at', 'desc')->get());
+
+        return ViolationTypeResource::collection(ViolationType::orderBy('created_at', 'desc')->get());
     }
 
 
