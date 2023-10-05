@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Heading icon="mdi-account-group-outline">Employees</Heading>
         <v-btn
             prepend-icon="mdi-plus"
             class="text-none mb-3"
@@ -63,7 +64,7 @@ import { useEmployeeStore } from "@/stores/employeeStore";
 import { useDepartmentStore } from "@/stores/departmentStore";
 import Create from "./Create.vue";
 import Edit from "./Edit.vue";
-
+import Heading from "@/components/Heading.vue";
 import { storeToRefs } from "pinia";
 export default {
     async setup() {
@@ -81,7 +82,7 @@ export default {
             errors,
         };
     },
-    components: { VDataTable, Create, Edit },
+    components: { VDataTable, Create, Edit, Heading },
     data() {
         return {
             search: "",
