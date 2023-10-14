@@ -3,7 +3,7 @@
         <template v-slot:activator="{ props }">
             <p class="text-caption text-secondary">Hi, Example User</p>
             <v-btn icon v-bind="props">
-                <v-avatar size="small" image="https://i.pravatar.cc/100">
+                <v-avatar size="small" image="https://i.pravatar.cc/100?img=12">
                 </v-avatar>
             </v-btn>
         </template>

@@ -5,10 +5,9 @@ export const useViolationStore = defineStore("violations", {
         return {
             violations: [],
             form: {
-                description: "",
+                description: null,
                 violation_type_id: null,
-                action_length: null,
-                disciplinaryActionIds: [],
+                action_length: 1,
             },
         };
     },
@@ -61,9 +60,9 @@ export const useViolationStore = defineStore("violations", {
         },
         clearForm() {
             this.form = {
-                description: "",
+                description: null,
                 violation_type_id: null,
-                action_length: null,
+                action_length: 5,
             };
             this.errors = {};
         },

@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <v-navigation-drawer v-model="drawer" width="200">
+        <v-navigation-drawer v-model="drawer" width="250" style="height: 100%">
             <!-- <v-list-item prepend-avatar="/Logo.svg"></v-list-item> -->
             <v-img src="/Logo.svg"></v-img>
             <v-divider class="my-3"></v-divider>
@@ -19,6 +19,29 @@
                         :title="link.title"
                         :value="link.value"
                     ></v-list-item>
+                </router-link>
+            </v-list>
+
+            <v-list
+                density="compact"
+                nav
+                style="position: absolute; bottom: 0; left: 0; right: 0"
+                base-color="secondary"
+            >
+                <v-divider class="mb-5"></v-divider>
+                <router-link :to="{ name: 'employee' }">
+                    <v-list-item
+                        prepend-icon="mdi-account-outline"
+                        title="Profile"
+                        value="profile"
+                    />
+                </router-link>
+                <router-link :to="{ name: 'contract' }">
+                    <v-list-item
+                        prepend-icon="mdi-logout-variant"
+                        title="Logout"
+                        value="logout"
+                    />
                 </router-link>
             </v-list>
         </v-navigation-drawer>

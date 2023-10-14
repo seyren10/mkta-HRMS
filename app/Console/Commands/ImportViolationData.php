@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Imports\DisciplinaryActionImport;
 use App\Imports\ViolationImport;
 use Illuminate\Console\Command;
 use Maatwebsite\Excel\Facades\Excel;
@@ -20,7 +21,7 @@ class ImportViolationData extends Command
      *
      * @var string
      */
-    protected $description = 'Import data from Excel file to violations table (make sure to populate the violation_types table first) ';
+    protected $description = 'Import data from Excel file to violations & disciplinary actions table (make sure to populate the violation_types table first) ';
 
 
     /**
@@ -29,5 +30,6 @@ class ImportViolationData extends Command
     public function handle()
     {
         Excel::import(new ViolationImport, public_path('importsExcel/violations.xlsx'));
+        Excel::import(new DisciplinaryActionImport, public_path('importsExcel/disciplinary-action.xlsx'));
     }
 }

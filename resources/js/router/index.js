@@ -18,6 +18,19 @@ const routes = [
                 path: "employee",
                 name: "employee",
                 component: () => import("@/Pages/Employees/Index.vue"),
+                children: [
+                    {
+                        path: ":id/show",
+                        name: "employeeShow",
+                        component: () => import("@/Pages/Employees/Show.vue"),
+                        props: true,
+                    },
+                ],
+            },
+            {
+                path: "employee-violation",
+                name: "employeeViolation",
+                component: () => import("@/Pages/EmployeeViolation/Index.vue"),
             },
             {
                 path: "nte",
@@ -50,11 +63,6 @@ const routes = [
                 path: "violation",
                 name: "violation",
                 component: () => import("@/Pages/Violation/Index.vue"),
-            },
-            {
-                path: ":showable+/:id/show",
-                name: "show",
-                component: () => import("@/components/Show.vue"),
             },
         ],
     },

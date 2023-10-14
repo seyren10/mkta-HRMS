@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-show="!$route.params.id">
         <Heading icon="mdi-account-group-outline">Employees</Heading>
         <v-btn
             prepend-icon="mdi-plus"
@@ -24,7 +24,7 @@
         >
             <template #item="{ item }">
                 <router-link
-                    :to="`employee/${item.raw.id}/show`"
+                    :to="{ name: 'employeeShow', params: { id: item.raw.id } }"
                     class="data-table-row"
                     role="row"
                 >
@@ -56,16 +56,31 @@
             <Create @close="dialog.isOpen = false" :departments="departments" />
         </v-dialog>
     </div>
+    <div v-show="$route.params.id">
+        <router-view v-slot="{ Component }">
+            <template v-if="Component">
+                <Suspense timeout="0">
+                    <component :is="Component" />
+
+                    <template v-slot:fallback>
+                        <Spinner />
+                    </template>
+                </Suspense>
+            </template>
+        </router-view>
+    </div>
 </template>
 
 <script>
 import { VDataTable } from "vuetify/lib/labs/components.mjs";
 import { useEmployeeStore } from "@/stores/employeeStore";
 import { useDepartmentStore } from "@/stores/departmentStore";
+import { storeToRefs } from "pinia";
+
+import Heading from "@/components/Heading.vue";
+import Spinner from "@/components/Spinner.vue";
 import Create from "./Create.vue";
 import Edit from "./Edit.vue";
-import Heading from "@/components/Heading.vue";
-import { storeToRefs } from "pinia";
 export default {
     async setup() {
         const employeeStore = useEmployeeStore();
@@ -82,7 +97,7 @@ export default {
             errors,
         };
     },
-    components: { VDataTable, Create, Edit, Heading },
+    components: { VDataTable, Create, Edit, Heading, Spinner },
     data() {
         return {
             search: "",

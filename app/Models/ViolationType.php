@@ -18,4 +18,9 @@ class ViolationType extends Model
     {
         return $this->hasMany(\App\Models\Violation::class)->orderBy('id', 'desc');
     }
+
+    public function disciplinaryActions()
+    {
+        return $this->hasManyThrough(\App\Models\DisciplinaryAction::class, \App\Models\Violation::class);
+    }
 }

@@ -10,64 +10,76 @@
             >Violation Types</v-btn
         >
 
-        <v-expansion-panels variant="popout" class="mt-3">
-            <v-expansion-panel
-                v-for="violationType in violationTypes"
-                :key="violationType.id"
-                :title="violationType.violation_type"
-            >
-                <v-expansion-panel-text>
-                    <v-btn
-                        prepend-icon="mdi-plus"
-                        block
+        <Accordion :items="violationTypes" title-key="violation_type">
+            <template v-slot="{ item: violationType }">
+                <v-btn
+                    prepend-icon="mdi-plus"
+                    block
+                    flat
+                    color="secondary"
+                    @click="handleAddViolation(violationType)"
+                    >add violation</v-btn
+                >
+                <div class="row">
+                    <v-card
+                        v-for="violation in violationType.violations"
+                        class="my-2 border"
                         flat
-                        color="secondary"
-                        @click="handleAddViolation(violationType)"
-                        >add violation</v-btn
                     >
-                    <div class="row">
-                        <v-card
-                            v-for="violation in violationType.violations"
-                            class="my-2 border"
-                            flat
-                        >
-                            <v-card-text class="d-grid list-item">
+                        <v-card-text class="d-grid list-item">
+                            <v-sheet
+                                position="absolute"
+                                style="right: 0; bottom: 0"
+                                class="text-primary edit"
+                            >
                                 <v-btn
-                                    position="absolute"
-                                    style="right: 0; top: 0"
+                                    icon="mdi-information"
+                                    flat
+                                    size="large"
+                                    @click="
+                                        handleShowViolation(
+                                            violation.id,
+                                            violationType
+                                        )
+                                    "
+                                ></v-btn>
+                                <v-btn
                                     icon="mdi-pencil-outline"
                                     flat
-                                    size="small"
-                                    class="text-primary edit"
+                                    size="large"
                                     @click="
                                         handleEditViolation(
                                             violation.id,
                                             violationType
                                         )
                                     "
+                                    class="text-secondary"
                                 ></v-btn>
-                                <p class="text-caption">
-                                    <strong>Description:</strong>
-                                    {{ violation.description }}
-                                </p>
-                                <div
-                                    class="text-caption chip text-primary bg-accent-light"
-                                >
-                                    Steps/Action Length:
-                                    {{ violation.action_length }}
-                                </div>
-                            </v-card-text>
-                        </v-card>
-                    </div>
-                </v-expansion-panel-text>
-            </v-expansion-panel>
-        </v-expansion-panels>
-        <v-dialog v-model="dialog.state" width="500" persistent>
+                            </v-sheet>
+                            <p class="text-caption">
+                                <strong>Description:</strong>
+                                {{ violation.description }}
+                            </p>
+                            <div
+                                class="text-caption chip bg-accent-light text-secondary"
+                            >
+                                Offense count before Dismissal/Termination:
+                                {{ violation.disciplinaryActions.length }}
+                            </div>
+                        </v-card-text>
+                    </v-card>
+                </div>
+            </template>
+        </Accordion>
+        <v-dialog v-model="dialog.state" persistent fullscreen>
             <template v-slot:default="{ isActive }">
                 <component
                     :is="dialog.component"
                     v-bind="dialog.props"
-                    @close="isActive.value = !isActive.value"
+                    @close="
+                        isActive.value = !isActive.value;
+                        violationStore.clearForm();
+                    "
                 ></component>
             </template>
         </v-dialog>
@@ -78,27 +90,38 @@
 import { storeToRefs } from "pinia";
 import { useViolationStore } from "@/stores/violationStore";
 import { useViolationTypeStore } from "@/stores/violationTypeStore";
+import { useDisciplinaryMeasureStore } from "@/stores/disciplinaryMeasureStore";
 
 import Create from "./Create.vue";
 import Edit from "./Edit.vue";
 import Heading from "@/components/Heading.vue";
+import Accordion from "@/components/Accordion.vue";
+
 export default {
     async setup() {
         const violationStore = useViolationStore();
         const violationTypeStore = useViolationTypeStore();
-        await violationTypeStore.getViolationTypes();
+        const disciplinaryMeasureStore = useDisciplinaryMeasureStore();
+
+        await disciplinaryMeasureStore.getDisciplinaryMeasures();
+        await violationTypeStore.getViolationTypes({
+            includeViolations: true,
+        });
 
         const { form, loading, errors } = storeToRefs(violationStore);
         const { violationTypes } = storeToRefs(violationTypeStore);
+        const { disciplinaryMeasures } = storeToRefs(disciplinaryMeasureStore);
 
         return {
+            violationStore,
             violationTypes,
+            disciplinaryMeasures,
             form,
             loading,
             errors,
         };
     },
-    components: { Create, Edit, Heading },
+    components: { Create, Edit, Heading, Accordion },
     data() {
         return {
             showForm: false,
@@ -118,6 +141,7 @@ export default {
                 component: "Create",
                 props: {
                     violationType,
+                    disciplinaryMeasures: this.disciplinaryMeasures,
                 },
             };
         },
@@ -128,9 +152,11 @@ export default {
                 props: {
                     violationId,
                     violationType,
+                    disciplinaryMeasures: this.disciplinaryMeasures,
                 },
             };
         },
+        handleShowViolation() {},
     },
 };
 </script>
@@ -142,6 +168,9 @@ export default {
     @media screen and (max-width: 40em) {
         display: block !important;
     }
+}
+.list-item {
+    gap: 1rem;
 }
 .list-item:hover .edit {
     display: block !important;

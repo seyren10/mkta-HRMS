@@ -22,7 +22,7 @@ class ViolationImport implements ToModel, WithHeadingRow
         $violationType = ViolationType::where('violation_type', Str::of($row['TYPE'])->lower())->first();
         return new Violation([
             'description' => $row['DESCRIPTION'],
-            'violation_type_id' => $violationType ? $violationType->id : 1
-        ]);
+            'violation_type_id' => $violationType ? $violationType->id : 1,
+        ]);;
     }
 }

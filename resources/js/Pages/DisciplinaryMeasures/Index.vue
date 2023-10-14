@@ -1,6 +1,6 @@
 <template>
     <section>
-        <Heading icon="mdi-shield-outline">Disciplinary Measures</Heading>
+        <Heading icon="mdi-shield-outline">Disciplinary Actions</Heading>
         <v-sheet rounded elevation="1" class="pa-4 mt-4">
             <v-btn
                 block
@@ -9,7 +9,7 @@
                 color="secondary"
                 @click="showForm = true"
                 v-if="!showForm"
-                >add Disciplinary Measure</v-btn
+                >add Disciplinary Action</v-btn
             >
             <v-form
                 class="form-single"

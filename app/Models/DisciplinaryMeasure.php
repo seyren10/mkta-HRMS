@@ -12,4 +12,9 @@ class DisciplinaryMeasure extends Model
     protected $fillable = [
         'title'
     ];
+
+    public function disciplinaryActions()
+    {
+        return  $this->hasMany(\App\Models\DisciplinaryAction::class);
+    }
 }

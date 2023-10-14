@@ -14,6 +14,13 @@ export const navLinkData = [
         iconSelect: "mdi-account-group",
     },
     {
+        path: { name: "employeeViolation" },
+        title: "Employee Violations",
+        value: "employeeViolations",
+        icon: "mdi-account-alert-outline",
+        iconSelect: "mdi-account-alert",
+    },
+    {
         path: { name: "violation" },
         title: "Violations",
         value: "violation",
@@ -22,8 +29,8 @@ export const navLinkData = [
     },
     {
         path: { name: "disciplinaryMeasure" },
-        title: "Disciplinary",
-        value: "disciplinaryMeasure",
+        title: "Disciplinary Measures",
+        value: "disciplinaryMeasures",
         icon: "mdi-shield-outline",
         iconSelect: "mdi-shield",
     },

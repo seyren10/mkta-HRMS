@@ -1,37 +1,38 @@
 import { defineStore } from "pinia";
 
-export const useViolationStore = defineStore("violations", {
+export const useEmployeeViolationStore = defineStore("employeeViolations", {
     state() {
         return {
-            violations: [],
+            employeeViolations: [],
             form: {
-                description: "",
-                violation_type_id: null,
-                action_length: null,
-                disciplinaryActionIds: [],
+                employee_id: null,
+                violation_id: null,
             },
         };
     },
     actions: {
-        async getViolations() {
+        async getEmployeeViolations() {
             try {
                 this.loading = true;
-                const res = await axios.get("/api/violation");
-
-                this.violations = res.data.data;
+                const res = await axios.get("/api/employee-violation", {
+                    params: {
+                        includeViolations: true,
+                    },
+                });
+                this.employeeViolations = res.data.data;
             } catch (e) {
                 this.errors = e.response.data.errors;
             } finally {
                 this.loading = false;
             }
         },
-        async addViolation() {
+        async addEmployeeViolation() {
             try {
                 this.loading = true;
-                await axios.post("/api/violation", this.form);
+                await axios.post("/api/employee-violation", this.form);
 
                 this.errors = {};
-                await this.getViolations();
+                await this.getEmployeeViolations();
                 this.clearForm();
             } catch (e) {
                 console.log(e);
@@ -40,13 +41,16 @@ export const useViolationStore = defineStore("violations", {
                 this.loading = false;
             }
         },
-        async updateViolation() {
+        async updateEmployeeViolation() {
             try {
                 this.loading = true;
-                await axios.put(`/api/violation/${this.form.id}`, this.form);
+                await axios.put(
+                    `/api/employee-violation/${this.form.id}`,
+                    this.form
+                );
 
                 this.errors = {};
-                await this.getViolations();
+                await this.getEmployeeViolations();
                 this.clearForm();
             } catch (e) {
                 console.log(e);
@@ -61,9 +65,8 @@ export const useViolationStore = defineStore("violations", {
         },
         clearForm() {
             this.form = {
-                description: "",
-                violation_type_id: null,
-                action_length: null,
+                employee_id: null,
+                violation_id: null,
             };
             this.errors = {};
         },

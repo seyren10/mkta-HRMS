@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ViolationResource;
+use App\Models\DisciplinaryAction;
 use App\Models\Violation;
 use Illuminate\Http\Request;
 
@@ -29,13 +30,25 @@ class ViolationController extends Controller
      */
     public function store(Request $request)
     {
-        Violation::create(
+        $violation =  Violation::create(
             $request->validate([
                 'description' => 'required',
                 'action_length' => 'required|integer',
                 'violation_type_id' => 'required'
             ])
         );
+
+        $data = array_map(function ($el, $i) use ($violation) {
+            return [
+                'violation_id' => $violation->id,
+                'disciplinary_measure_id' => $el,
+                'offense_no' => $i + 1
+            ];
+        }, $request->disciplinaryActionIds, array_keys($request->disciplinaryActionIds));
+
+        foreach ($data as $value) {
+            DisciplinaryAction::create($value);
+        }
 
         return response()->noContent();
     }
@@ -68,6 +81,28 @@ class ViolationController extends Controller
                 'violation_type_id' => 'required'
             ])
         );
+        if ($violation) {
+            $updatedViolation = [];
+            $updatedViolation = $violation->fresh();
+
+            $data = array_map(function ($el, $i) use ($updatedViolation) {
+                return [
+                    'violation_id' => $updatedViolation->id,
+                    'disciplinary_measure_id' => $el,
+                    'offense_no' => $i + 1
+                ];
+            }, $request->disciplinaryActionIds, array_keys($request->disciplinaryActionIds));
+
+            //delete existing data
+            $violation->disciplinaryActions()->delete();
+
+            //create new data
+            foreach ($data as $value) {
+                DisciplinaryAction::create($value);
+            }
+        }
+
+
 
         return response()->noContent();
     }

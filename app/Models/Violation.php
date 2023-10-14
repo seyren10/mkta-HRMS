@@ -23,4 +23,9 @@ class Violation extends Model
     {
         return $this->belongsTo(\App\Models\ViolationType::class, 'violation_type_id');
     }
+
+    public function disciplinaryActions()
+    {
+        return $this->hasMany(\App\Models\DisciplinaryAction::class);
+    }
 }

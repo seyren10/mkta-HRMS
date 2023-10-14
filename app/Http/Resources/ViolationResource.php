@@ -18,6 +18,8 @@ class ViolationResource extends JsonResource
     {
         $data =  parent::toArray($request);
 
+        $data['disciplinaryActions']  =  DisciplinaryActionResource::collection($this->disciplinaryActions);
+
         if ($request->has('includeViolationType'))
             $data['violationType']  = new ViolationTypeResource($this->violationType);
 

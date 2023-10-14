@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\EmployeeResource;
 use App\Models\Employee;
+use App\Models\EmployeeViolation;
 use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
@@ -11,9 +12,9 @@ class EmployeeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return EmployeeResource::collection(Employee::orderBy('created_at', 'desc')->get());
+        return EmployeeResource::collection(Employee::search((string)$request->q)->get());
     }
 
     public function show(Employee $employee)

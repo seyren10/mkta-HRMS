@@ -23,6 +23,9 @@ class ViolationTypeResource extends JsonResource
         if ($request->has('includeViolations')) {
             $data['violations'] = ViolationResource::collection($this->violations);
         }
+        if ($request->has('includeDisciplinaryActions')) {
+            $data['disciplinaryActions'] = ViolationResource::collection($this->disciplinaryActions);
+        }
 
         return $data;
     }

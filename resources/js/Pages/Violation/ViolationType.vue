@@ -1,15 +1,21 @@
 <template>
     <section>
-        <h1><v-icon>mdi-format-list-checkbox</v-icon> Violation Types</h1>
-        <v-btn
-            class="my-4 text-none"
-            prepend-icon="mdi-arrow-left"
-            flat
-            size="small"
-            @click="$router.back()"
-            color="primary"
-            >Back</v-btn
-        >
+        <v-toolbar>
+            <v-btn
+                class="my-4 text-none"
+                prepend-icon="mdi-arrow-left"
+                flat
+                size="small"
+                @click="$router.back()"
+                color="primary"
+                >Back</v-btn
+            >
+            <v-toolbar-title>
+                <Heading icon="mdi-playlist-star">Violation Types</Heading>
+            </v-toolbar-title>
+           
+        </v-toolbar>
+
         <v-sheet
             rounded
             elevation="1"
@@ -79,6 +85,8 @@
 <script>
 import { useViolationTypeStore } from "@/stores/violationTypeStore";
 import { storeToRefs } from "pinia";
+
+import Heading from "@/components/Heading.vue";
 export default {
     async setup() {
         const violationTypeStore = useViolationTypeStore();
@@ -95,6 +103,7 @@ export default {
             loading,
         };
     },
+    components: { Heading },
     data() {
         return {
             showForm: false,

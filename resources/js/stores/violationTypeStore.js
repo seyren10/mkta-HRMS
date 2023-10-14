@@ -10,13 +10,11 @@ export const useViolationTypeStore = defineStore("violationTypes", {
         };
     },
     actions: {
-        async getViolationTypes() {
+        async getViolationTypes(params = {}) {
             try {
                 this.loading = true;
                 const res = await axios.get("/api/violation-type", {
-                    params: {
-                        includeViolations: true,
-                    },
+                    params,
                 });
                 this.violationTypes = res.data.data;
             } catch (e) {

@@ -72,6 +72,22 @@ export const useEmployeeStore = defineStore("employees", {
                 this.loading = false;
             }
         },
+        async searchEmployees(data) {
+            try {
+                this.loading = true;
+                const res = await axios.get(`/api/employee`, {
+                    params: { q: data },
+                });
+                console.log(res);
+                this.employees = res.data.data;
+                this.errors = {};
+            } catch (e) {
+                console.log(e);
+                this.errors = e.response.data.errors;
+            } finally {
+                this.loading = false;
+            }
+        },
 
         setForm(data) {
             this.form = data;
