@@ -18,13 +18,11 @@ class Employee extends Model
         'last_name',
         'position',
         'hired_date',
-        'is_active',
+        'status',
         'department_id'
     ];
 
-    protected $casts = [
-        'is_active' => 'boolean'
-    ];
+
     protected $hidden = [
         'department_id'
     ];
@@ -44,6 +42,8 @@ class Employee extends Model
         return $this->hasMany(\App\Models\EmployeeViolation::class);
     }
 
+    //for laravel scout 
+    //indicates what fields to be searchable
     public function toSearchableArray(): array
     {
         return [

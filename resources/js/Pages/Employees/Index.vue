@@ -37,7 +37,13 @@
                     <td>{{ item.raw.hired_date }}</td>
                     <td>
                         <v-chip
-                            :color="item.selectable.is_active ? 'green' : 'red'"
+                            :color="
+                                item.selectable.status === 'active'
+                                    ? 'green'
+                                    : item.selectable.status === 'suspended'
+                                    ? 'orange'
+                                    : 'red'
+                            "
                             size="small"
                             >{{ item.selectable.status }}</v-chip
                         >
@@ -85,7 +91,7 @@ export default {
     async setup() {
         const employeeStore = useEmployeeStore();
         const departmentStore = useDepartmentStore();
-        await employeeStore.getEmployees();
+        await employeeStore.getEmployees({ includeEmployeeViolations: true });
         const { employees, form, loading, errors } = storeToRefs(employeeStore);
         const { departments } = storeToRefs(departmentStore);
         return {

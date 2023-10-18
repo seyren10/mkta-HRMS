@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('violations', function (Blueprint $table) {
-            $table->integer('action_length')->default(5);
+        Schema::table('employees', function (Blueprint $table) {
+            $table->enum('status', ['active', 'suspended', 'dismissed'])->default('active');
         });
     }
 
@@ -21,8 +21,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('violations', function (Blueprint $table) {
-            $table->dropColumn('action_length');
+        Schema::table('employees', function (Blueprint $table) {
+
+            $table->dropColumn(['status', 'is_active']);
         });
     }
 };

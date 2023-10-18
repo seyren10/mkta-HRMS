@@ -121,15 +121,14 @@
                 </v-list-item>
                 <v-list-item>
                     <v-list-item-title
-                        ><v-switch
+                        ><v-select
                             variant="underlined"
                             density="compact"
                             :readonly="!isEditing"
-                            color="green"
                             hide-details
-                            v-model="editForm.is_active"
-                            :label="editForm.is_active ? 'Active' : 'Inactive'"
-                        ></v-switch
+                            v-model="editForm.status"
+                            :items="['active', 'suspended', 'dismissed']"
+                        ></v-select
                     ></v-list-item-title>
                     <v-list-item-subtitle>Status </v-list-item-subtitle>
                 </v-list-item>

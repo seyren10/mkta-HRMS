@@ -12,13 +12,11 @@ class EmployeeViolation extends Model
     protected $fillable = [
         'employee_id',
         'violation_id',
-        'disciplinary_measure_id'
     ];
 
     protected $hidden = [
         'employee_id',
         'violation_id',
-        'disciplinary_measure_id'
     ];
 
     public function employee()
@@ -28,10 +26,5 @@ class EmployeeViolation extends Model
     public function violation()
     {
         return $this->belongsTo(\App\Models\violation::class, 'violation_id');
-    }
-
-    public function disciplinaryMeasure()
-    {
-        return $this->belongsTo(\App\Models\DisciplinaryMeasure::class, 'disciplinary_measure_id');
     }
 }

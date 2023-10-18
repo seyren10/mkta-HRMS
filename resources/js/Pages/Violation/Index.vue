@@ -20,53 +20,18 @@
                     @click="handleAddViolation(violationType)"
                     >add violation</v-btn
                 >
-                <div class="row">
+                <div class="row align-start">
                     <v-card
                         v-for="violation in violationType.violations"
                         class="my-2 border"
                         flat
                     >
-                        <v-card-text class="d-grid list-item">
-                            <v-sheet
-                                position="absolute"
-                                style="right: 0; bottom: 0"
-                                class="text-primary edit"
-                            >
-                                <v-btn
-                                    icon="mdi-information"
-                                    flat
-                                    size="large"
-                                    @click="
-                                        handleShowViolation(
-                                            violation.id,
-                                            violationType
-                                        )
-                                    "
-                                ></v-btn>
-                                <v-btn
-                                    icon="mdi-pencil-outline"
-                                    flat
-                                    size="large"
-                                    @click="
-                                        handleEditViolation(
-                                            violation.id,
-                                            violationType
-                                        )
-                                    "
-                                    class="text-secondary"
-                                ></v-btn>
-                            </v-sheet>
-                            <p class="text-caption">
-                                <strong>Description:</strong>
-                                {{ violation.description }}
-                            </p>
-                            <div
-                                class="text-caption chip bg-accent-light text-secondary"
-                            >
-                                Offense count before Dismissal/Termination:
-                                {{ violation.disciplinaryActions.length }}
-                            </div>
-                        </v-card-text>
+                        <ViolationItem
+                            :violation="violation"
+                            :violationType="violationType"
+                            :disciplinary-measures="disciplinaryMeasures"
+                            @click="(data) => (dialog = data)"
+                        />
                     </v-card>
                 </div>
             </template>
@@ -96,6 +61,7 @@ import Create from "./Create.vue";
 import Edit from "./Edit.vue";
 import Heading from "@/components/Heading.vue";
 import Accordion from "@/components/Accordion.vue";
+import ViolationItem from "./components/ViolationItem.vue";
 
 export default {
     async setup() {
@@ -121,7 +87,7 @@ export default {
             errors,
         };
     },
-    components: { Create, Edit, Heading, Accordion },
+    components: { Create, Edit, Heading, Accordion, ViolationItem },
     data() {
         return {
             showForm: false,
@@ -145,34 +111,8 @@ export default {
                 },
             };
         },
-        handleEditViolation(violationId, violationType) {
-            this.dialog = {
-                state: true,
-                component: "Edit",
-                props: {
-                    violationId,
-                    violationType,
-                    disciplinaryMeasures: this.disciplinaryMeasures,
-                },
-            };
-        },
-        handleShowViolation() {},
     },
 };
 </script>
 
-<style scoped>
-.edit {
-    display: none !important;
-
-    @media screen and (max-width: 40em) {
-        display: block !important;
-    }
-}
-.list-item {
-    gap: 1rem;
-}
-.list-item:hover .edit {
-    display: block !important;
-}
-</style>
+<style scoped></style>

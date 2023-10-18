@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\DisciplinaryActionResource;
 use App\Models\DisciplinaryAction;
+use App\Models\Violation;
 use Illuminate\Http\Request;
 
 class DisciplinaryActionController extends Controller
@@ -37,7 +38,6 @@ class DisciplinaryActionController extends Controller
      */
     public function show(DisciplinaryAction $disciplinaryAction)
     {
-        //
     }
 
     /**

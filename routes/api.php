@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\DisciplinaryActionController;
 use App\Http\Controllers\DisciplinaryMeasureController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\EmployeeViolationController;
 use App\Http\Controllers\ViolationController;
 use App\Http\Controllers\ViolationTypeController;
 use Illuminate\Http\Request;
@@ -25,6 +27,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::apiResource('department', DepartmentController::class);
 Route::apiResource('employee', EmployeeController::class);
+Route::apiResource('employee-violation', EmployeeViolationController::class);
 Route::apiResource('disciplinary-measure', DisciplinaryMeasureController::class);
+Route::apiResource('disciplinary-action', DisciplinaryActionController::class);
 Route::apiResource('violation-type', ViolationTypeController::class);
 Route::apiResource('violation', ViolationController::class);

@@ -1,4 +1,6 @@
 import { defineStore } from "pinia";
+import { useEmployeeViolationStore } from "./employeeViolationStore";
+import { useViolationStore } from "./violationStore";
 
 export const useEmployeeStore = defineStore("employees", {
     state() {
@@ -13,15 +15,42 @@ export const useEmployeeStore = defineStore("employees", {
                 is_active: true,
                 department_id: null,
                 hired_date: new Date().toISOString().split("T")[0],
-                is_active: true,
             },
         };
     },
+    getters: {
+        getViolationAttemptsByEmployeeId(state) {
+            return (id) => {
+                const employeeViolationStore = useEmployeeViolationStore();
+
+                return state.employees
+                    .find((el) => el.id === id)
+                    .employeeViolations.reduce((acc, curr) => {
+                        if (
+                            curr.violation.id ===
+                            employeeViolationStore.form.violation_id
+                        )
+                            acc++;
+                        return acc;
+                    }, 0);
+            };
+        },
+        getViolationAttempts(state) {
+            return (id, violationId) => {
+                return state.employees
+                    .find((el) => el.id === id)
+                    .employeeViolations.reduce((acc, curr) => {
+                        if (curr.violation.id === violationId) acc++;
+                        return acc;
+                    }, 0);
+            };
+        },
+    },
     actions: {
-        async getEmployees() {
+        async getEmployees(params = {}) {
             try {
                 this.loading = true;
-                const res = await axios.get("/api/employee");
+                const res = await axios.get("/api/employee", { params });
                 this.employees = res.data.data;
             } catch (e) {
                 this.errors = e.response.data.errors;

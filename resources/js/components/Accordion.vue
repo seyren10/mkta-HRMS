@@ -5,6 +5,11 @@
             :key="item.id"
             :title="item[titleKey]"
         >
+            <v-expansion-panel-title v-if="!titleKey">
+                <template v-slot:default="props">
+                    <slot name="title" :item="item"></slot>
+                </template>
+            </v-expansion-panel-title>
             <v-expansion-panel-text>
                 <slot :item="item">No Content available</slot>
             </v-expansion-panel-text>

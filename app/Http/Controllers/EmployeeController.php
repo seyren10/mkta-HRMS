@@ -6,6 +6,8 @@ use App\Http\Resources\EmployeeResource;
 use App\Models\Employee;
 use App\Models\EmployeeViolation;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Enum;
 
 class EmployeeController extends Controller
 {
@@ -34,7 +36,7 @@ class EmployeeController extends Controller
                 'first_name' => 'required|string|max:20',
                 'last_name' => 'required|string|max:20',
                 'hired_date' => 'required|date',
-                'is_active' => 'required|boolean',
+                'status' => ['required', Rule::in(['active', 'suspended', 'dismissed'])],
                 'department_id' => 'required|integer'
             ]),
         ]);
@@ -55,7 +57,7 @@ class EmployeeController extends Controller
                 'first_name' => 'required|string|max:20',
                 'last_name' => 'required|string|max:20',
                 'hired_date' => 'required|date',
-                'is_active' => 'required|boolean',
+                'status' => ['required', Rule::in(['active', 'suspended', 'dismissed'])],
                 'department_id' => 'required|integer'
             ]),
         ]);

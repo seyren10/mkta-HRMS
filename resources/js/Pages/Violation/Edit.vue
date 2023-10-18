@@ -168,8 +168,10 @@ export default {
             await this.violationTypeStore.getViolationTypes({
                 includeViolations: true,
             });
+            this.$emit("close");
+
             if (!Object.keys(this.errors).length) {
-                this.close;
+                this.$emit("close");
             }
         },
         handleIncreaseActionLength() {

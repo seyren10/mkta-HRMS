@@ -18,11 +18,15 @@ class EmployeeResource extends JsonResource
     public static $wrap = 'employee';
     public function toArray(Request $request): array
     {
-        return [
+        $data =  [
             ...parent::toArray($request),
             'full_name' => Str::of($this->first_name . " " . $this->last_name)->headline(),
             'department' => new DepartmentResource($this->ownedByDepartment),
-            'status' => $this->is_active ? 'active' : 'inactive'
         ];
+
+        if ($request->has('includeEmployeeViolations'))
+            $data['employeeViolations'] = EmployeeViolationResource::collection($this->employeeViolations);
+
+        return $data;
     }
 }

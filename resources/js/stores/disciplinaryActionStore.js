@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
 
-export const useViolationStore = defineStore("violations", {
+export const useDisciplinaryActionStore = defineStore("disciplinaryActions", {
     state() {
         return {
-            violations: [],
+            disciplinaryActions: [],
             form: {
                 description: null,
                 violation_type_id: null,
@@ -12,25 +12,25 @@ export const useViolationStore = defineStore("violations", {
         };
     },
     actions: {
-        async getViolations() {
+        async getDisciplinaryActions() {
             try {
                 this.loading = true;
-                const res = await axios.get("/api/violation");
+                const res = await axios.get("/api/disciplinary-action");
 
-                this.violations = res.data.data;
+                this.disciplinaryActions = res.data.data;
             } catch (e) {
                 this.errors = e.response.data.errors;
             } finally {
                 this.loading = false;
             }
         },
-        async addViolation() {
+        async addDisciplinaryAction() {
             try {
                 this.loading = true;
-                await axios.post("/api/violation", this.form);
+                await axios.post("/api/disciplinary-action", this.form);
 
                 this.errors = {};
-                await this.getViolations();
+                await this.getDisciplinaryActions();
                 this.clearForm();
             } catch (e) {
                 console.log(e);
@@ -39,10 +39,13 @@ export const useViolationStore = defineStore("violations", {
                 this.loading = false;
             }
         },
-        async updateViolation() {
+        async updateDisciplinaryAction() {
             try {
                 this.loading = true;
-                await axios.put(`/api/violation/${this.form.id}`, this.form);
+                await axios.put(
+                    `/api/disciplinary-action${this.form.id}`,
+                    this.form
+                );
 
                 this.errors = {};
                 await this.getViolations();

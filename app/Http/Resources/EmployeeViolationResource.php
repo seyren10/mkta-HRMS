@@ -14,10 +14,13 @@ class EmployeeViolationResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return  [
+        $data =   [
             ...parent::toArray($request),
-            'employee' => $this->employee,
-            'violation' => $this->violation
+            'violation' => new ViolationResource($this->violation)
         ];
+        if ($request->has('includeEmployee'))
+            $data['employee'] = new EmployeeResource($this->employee);
+
+        return $data;
     }
 }

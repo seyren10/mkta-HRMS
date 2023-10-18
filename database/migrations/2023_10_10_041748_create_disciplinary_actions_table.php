@@ -16,7 +16,7 @@ return new class extends Migration
             $table->timestamps();
             $table->foreignIdFor(\App\Models\Violation::class)->constrained('violations')->cascadeOnDelete()->cascadeOnDelete();
             $table->foreignIdFor(\App\Models\DisciplinaryMeasure::class)->constrained('disciplinary_measures')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->integer('offense_no');
+            $table->integer('offense_no')->nullable();
         });
     }
 

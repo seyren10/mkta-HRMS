@@ -161,7 +161,7 @@ export default {
                 includeViolations: true,
             });
             if (!Object.keys(this.errors).length) {
-                this.close;
+                this.$emit("close");
             }
         },
         handleIncreaseActionLength() {

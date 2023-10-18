@@ -4,6 +4,7 @@ export const useViolationStore = defineStore("violations", {
     state() {
         return {
             violations: [],
+            violation: {},
             form: {
                 description: "",
                 violation_type_id: null,
@@ -12,6 +13,7 @@ export const useViolationStore = defineStore("violations", {
             },
         };
     },
+
     actions: {
         async getViolations() {
             try {
