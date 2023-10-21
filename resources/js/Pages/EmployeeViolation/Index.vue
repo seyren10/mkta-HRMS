@@ -186,6 +186,11 @@ export default {
     },
 
     components: { Heading, Accordion, Create, ShowableContent },
+    provide() {
+        return {
+            employeeVilations: this.employeeViolations,
+        };
+    },
 };
 </script>
 

@@ -68,3 +68,19 @@ ul {
         grid-template-columns: repeat(4, 1fr);
     }
 }
+
+.gap-1 {
+    gap: 1rem;
+}
+.gap-2 {
+    gap: 1.25rem;
+}
+.gap-3 {
+    gap: 1.5rem;
+}
+.gap-4 {
+    gap: 2rem;
+}
+.gap-5 {
+    gap: 2.75rem;
+}

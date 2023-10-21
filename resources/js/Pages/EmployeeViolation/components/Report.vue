@@ -18,12 +18,12 @@
                     {{ violation.description }}
                 </v-list-item>
             </v-list>
-            <v-table>
+            <v-table fixed-header height="500">
                 <thead>
                     <tr>
                         <th>Employee</th>
                         <th>Disciplinary Action</th>
-                        <th></th>
+                        <!-- <th></th> -->
                     </tr>
                 </thead>
                 <tbody>
@@ -31,38 +31,64 @@
                         <td>{{ employee.full_name }}</td>
                         <td>
                             <v-chip>{{
-                                getDisciplinaryAction(employee.id)
+                                getEmployeeDisciplinaryAction(
+                                    employee.id,
+                                    violation.id,
+                                    1
+                                )
                             }}</v-chip>
                         </td>
+                        <!-- <td>
+                            <v-btn
+                                flat
+                                color="red"
+                                class="text-caption"
+                                size="small"
+                                prepend-icon="mdi-check"
+                                >Effective Immediately</v-btn
+                            >
+                        </td> -->
                     </tr>
                 </tbody>
             </v-table>
+            <div class="d-flex justify-space-between align-end">
+                <router-link
+                    class="text-primary text-overline"
+                    style="text-decoration: underline"
+                    prepend-icon="mdi-link"
+                    :to="{ name: 'pendingViolation' }"
+                    >Go to Pending Violations</router-link
+                >
+                <!-- <v-btn
+                    flat
+                    color="red"
+                    class="text-caption"
+                    prepend-icon="mdi-check-all"
+                    size="small"
+                    >Effective Immediately (all)</v-btn
+                > -->
+            </div>
         </v-card-text>
     </v-card>
 </template>
 
 <script>
-import { useEmployeeStore } from "@/stores/employeeStore";
 import { useEmployeeViolationStore } from "@/stores/employeeViolationStore";
-
+import { useViolationStore } from "@/stores/ViolationStore";
 import { storeToRefs } from "pinia";
 
 import Heading from "@/components/Heading.vue";
 export default {
     async setup() {
-        const employeeStore = useEmployeeStore();
         const employeeViolationStore = useEmployeeViolationStore();
-        await employeeViolationStore.getEmployeeViolations({
-            includeEmployee: true,
-        });
+        const { getEmployeeDisciplinaryAction, getEmployeeViolationAttempts } =
+            storeToRefs(employeeViolationStore);
+        const violationStore = useViolationStore();
+        await violationStore.getViolations();
 
-        const { getViolationAttemptsByEmployeeId } = storeToRefs(employeeStore);
-        const { employeeViolations, loading } = storeToRefs(
-            employeeViolationStore
-        );
         return {
-            getViolationAttemptsByEmployeeId,
-            employeeViolations,
+            getEmployeeDisciplinaryAction,
+            getEmployeeViolationAttempts,
         };
     },
     components: { Heading },
@@ -70,19 +96,6 @@ export default {
         violation: Object,
         violationType: Object,
         employees: Array,
-    },
-    methods: {
-        getDisciplinaryAction(id) {
-            const count = this.getViolationAttemptsByEmployeeId(id);
-
-            return this.employeeViolations
-                .find((el) => {
-                    return el.employee.id === id;
-                })
-                ?.violation.disciplinaryActions.find(
-                    (a) => a.offense_no === count
-                ).disciplinaryMeasure.title;
-        },
     },
 };
 </script>

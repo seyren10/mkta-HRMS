@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TemplateController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,4 +19,10 @@ Route::get('/', function () {
 });
 Route::fallback(function () {
     return view('app');
+});
+
+
+//* Document Generation end-points
+Route::prefix('/generate')->group(function () {
+    Route::get('/tardiness', [TemplateController::class, 'tardiness']);
 });
