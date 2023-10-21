@@ -1,13 +1,13 @@
 import { defineStore } from "pinia";
 import { useEmployeeStore } from "./employeeStore";
+import { useViolationStore } from "./violationStore";
+import { usePendingViolationStore } from "./pendingViolationStore";
+
 export const useEmployeeViolationStore = defineStore("employeeViolations", {
     state() {
         return {
             employeeViolations: [],
-            form: {
-                employee_id: null,
-                violation_id: null,
-            },
+            form: [],
         };
     },
     getters: {
@@ -36,7 +36,6 @@ export const useEmployeeViolationStore = defineStore("employeeViolations", {
                     id,
                     violationId
                 );
-                console.log("count:", count);
 
                 return state.employeeViolations
                     .find((el) => {
@@ -45,6 +44,48 @@ export const useEmployeeViolationStore = defineStore("employeeViolations", {
                     ?.violation.disciplinaryActions.find(
                         (a) => a.offense_no === count
                     )?.disciplinaryMeasure.title;
+            };
+        },
+
+        getEmployeeDisciplinaryAction(state) {
+            return (id, violationId, offset = 0) => {
+                const employeeViolations = state.employeeViolations.filter(
+                    (el) => {
+                        return (
+                            el.employee.id === id &&
+                            el.violation.id === violationId
+                        );
+                    }
+                );
+
+                if (!employeeViolations.length) {
+                    //when there's no violation found, it means
+                    //it's a first attempt thus giving the first disciplinary action
+                    const violationStore = useViolationStore();
+                    return violationStore.violations
+                        .find((e) => e.id === violationId)
+                        .disciplinaryActions?.at(0).disciplinaryMeasure.title;
+                }
+
+                return employeeViolations
+                    .at(0)
+                    .violation.disciplinaryActions.find(
+                        (a) =>
+                            a.offense_no === employeeViolations.length + offset
+                    ).disciplinaryMeasure.title;
+            };
+        },
+
+        getEmployeeViolationAttempts(state) {
+            return (id, violationId, offset = 0) => {
+                const violation = state.employeeViolations.filter((el) => {
+                    return (
+                        el.employee.id === id && el.violation.id === violationId
+                    );
+                });
+                if (violation.length) return violation.length + offset;
+
+                return offset;
             };
         },
     },
@@ -67,16 +108,15 @@ export const useEmployeeViolationStore = defineStore("employeeViolations", {
             try {
                 this.loading = true;
                 await axios.post("/api/employee-violation", this.form);
-
-                await this.getEmployeeViolations({ includeEmployee: true });
-
-                //fetch employees
-                const employeeStore = useEmployeeStore();
-                await employeeStore.getEmployees({
-                    includeEmployeeViolations: true,
-                });
-
                 this.errors = {};
+
+                const pendingViolationStore = usePendingViolationStore();
+
+                //delete the pending after it has been added
+                //to employeeViolations
+                await pendingViolationStore.deletePendingViolations(this.form);
+
+                this.clearForm();
             } catch (e) {
                 console.log(e);
                 this.errors = e.response.data.errors;
@@ -107,10 +147,7 @@ export const useEmployeeViolationStore = defineStore("employeeViolations", {
             this.form = data;
         },
         clearForm() {
-            this.form = {
-                employee_id: null,
-                violation_id: null,
-            };
+            this.form = [];
             this.errors = {};
         },
     },

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\EmployeeViolationResource;
-use App\Models\Employee;
 use App\Models\EmployeeViolation;
 use Illuminate\Http\Request;
 
@@ -33,24 +32,19 @@ class EmployeeViolationController extends Controller
         $validated = [
             ...$request->all(),
             ...$request->validate([
-                'employee_id' => 'required|array',
-                'violation_id' => 'required|integer',
+                '*.employee_id' => 'required|integer',
+                '*.violation_id' => 'required|integer',
             ])
         ];
 
-        $data = array_map(function ($el, $i) use ($request) {
-            return [
-                'employee_id' => $el,
-                'violation_id' => $request->violation_id,
-                'created_at' => now(),
-                'updated_at' => now()
-            ];
-        }, $request->employee_id, array_keys($request->employee_id));
+        foreach ($request->all() as $data) {
+            EmployeeViolation::create([
+                'employee_id' => $data['employee_id'],
+                'violation_id' => $data['violation_id'],
+            ]);
+        }
 
-
-
-        EmployeeViolation::insert($data);
-        return response()->json();
+        return response()->noContent();
     }
 
     /**

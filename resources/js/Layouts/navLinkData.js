@@ -21,6 +21,13 @@ export const navLinkData = [
         iconSelect: "mdi-account-alert",
     },
     {
+        path: { name: "pendingViolation" },
+        title: "Pending Violations",
+        value: "pendingViolations",
+        icon: "mdi-account-clock-outline",
+        iconSelect: "mdi-account-clock",
+    },
+    {
         path: { name: "violation" },
         title: "Violations",
         value: "violation",

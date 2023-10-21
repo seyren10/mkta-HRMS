@@ -24,8 +24,9 @@ class EmployeeResource extends JsonResource
             'department' => new DepartmentResource($this->ownedByDepartment),
         ];
 
-        if ($request->has('includeEmployeeViolations'))
+        if ($request->has('includeEmployeeViolations')) {
             $data['employeeViolations'] = EmployeeViolationResource::collection($this->employeeViolations);
+        }
 
         return $data;
     }

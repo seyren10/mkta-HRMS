@@ -49,36 +49,54 @@
                     <VDataTable
                         v-model="selected"
                         :headers="headers"
-                        :items="employees"
+                        :items="activeEmployees"
                         :search="search"
                         return-object
                         show-select
                         style="font-size: 0.8rem"
                         density="compact"
                     >
-                        <template #item.violationCount="{ item }">
-                            <v-chip
-                                :prepend-icon="
-                                    getViolationAttemptsByEmployeeId(
-                                        item.value.id
-                                    ) > 0
-                                        ? 'mdi-arrow-down'
-                                        : 'mdi-minus'
+                        <template v-slot:item.data-table-select="{ item }">
+                            <v-checkbox
+                                v-if="
+                                    !hasPendingViolation(
+                                        item.value.id,
+                                        this.form.violation_id
+                                    )
                                 "
-                                :color="
-                                    getViolationAttemptsByEmployeeId(
-                                        item.value.id
-                                    ) > 0
-                                        ? 'red'
-                                        : 'green'
+                                v-model="selected"
+                                :value="item.value"
+                                hide-details
+                                style="font-size: 0.8rem; margin-left: 0.3rem"
+                                color="primary"
+                                density="compact"
+                            />
+                        </template>
+                        <template #item.attempts="{ item }">
+                            <NumericChip
+                                :number="
+                                    getEmployeeViolationAttempts(
+                                        item.value.id,
+                                        this.form.violation_id
+                                    )
                                 "
                                 size="small"
-                                >{{
-                                    getViolationAttemptsByEmployeeId(
-                                        item.value.id
+                            />
+                        </template>
+                        <template #item.pendingViolation="{ item }">
+                            <v-chip
+                                size="small"
+                                class="text-caption"
+                                color="secondary"
+                                v-if="
+                                    hasPendingViolation(
+                                        item.value.id,
+                                        this.form.violation_id
                                     )
-                                }}</v-chip
+                                "
                             >
+                                Has Pending Violation
+                            </v-chip>
                         </template>
                     </VDataTable>
                 </section>
@@ -86,13 +104,12 @@
                     <Heading icon="mdi-check-all">Selected Employee(s)</Heading>
                     <VDataTable
                         :headers="headers"
-                        :items="selected"
-                        :search="search"
+                        :items="filteredSelected"
                         return-object
                         style="font-size: 0.8rem"
                         density="compact"
                     >
-                        <template #column.violationCount="props">
+                        <template #column.attempts="props">
                             <v-icon
                                 @click="
                                     selected = [];
@@ -101,7 +118,7 @@
                                 >mdi-close-circle-multiple-outline</v-icon
                             >
                         </template>
-                        <template #item.violationCount="{ item }">
+                        <template #item.attempts="{ item }">
                             <v-icon @click="deleteSelected(item.value)"
                                 >mdi-close-circle-outline</v-icon
                             >
@@ -153,32 +170,38 @@
             :violation="
                 violations.find((el) => el.id === this.form.violation_id)
             "
-            :employees="selected"
+            :employees="filteredSelected"
         />
     </v-dialog>
 </template>
 
 <script>
 import { useEmployeeViolationStore } from "@/stores/employeeViolationStore";
-import { useEmployeeStore } from "@/stores/employeeStore";
+import { usePendingViolationStore } from "@/stores/pendingViolationStore";
 import { storeToRefs } from "pinia";
 
 import Heading from "@/components/Heading.vue";
 import { VDataTable } from "vuetify/lib/labs/components.mjs";
 import Report from "./components/Report.vue";
+import NumericChip from "@/components/NumericChip.vue";
 
 export default {
     async setup() {
+        const pendingViolationStore = usePendingViolationStore();
+        await pendingViolationStore.getPendingViolations();
         const employeeViolationStore = useEmployeeViolationStore();
-        const employeeStore = useEmployeeStore();
 
-        const { getViolationAttemptsByEmployeeId } = storeToRefs(employeeStore);
-        const { form, errors, loading } = storeToRefs(employeeViolationStore);
+        const { form, errors, loading, pendingViolations } = storeToRefs(
+            pendingViolationStore
+        );
+        const { getEmployeeViolationAttempts } = storeToRefs(
+            employeeViolationStore
+        );
 
         return {
-            employeeStore,
-            employeeViolationStore,
-            getViolationAttemptsByEmployeeId,
+            pendingViolationStore,
+            pendingViolations,
+            getEmployeeViolationAttempts,
             form,
             errors,
             loading,
@@ -188,7 +211,7 @@ export default {
         employees: Array,
         violationTypes: Array,
     },
-    components: { Heading, VDataTable, Report },
+    components: { Heading, VDataTable, Report, NumericChip },
     emits: ["close"],
     data() {
         return {
@@ -199,11 +222,8 @@ export default {
                 { title: "Employee ID", key: "employee_id" },
                 { title: "Full Name", key: "full_name" },
                 { title: "Department", key: "department.title" },
-                {
-                    title: "Attempts",
-                    key: "violationCount",
-                    sortable: false,
-                },
+                { title: "Attempts", key: "attempts" },
+                { title: "", key: "pendingViolation" },
             ],
             search: "",
             confirm: false,
@@ -211,9 +231,6 @@ export default {
                 open: false,
             },
         };
-    },
-    unmounted() {
-        this.employeeViolationStore.clearForm();
     },
     methods: {
         deleteSelected(selected) {
@@ -223,8 +240,7 @@ export default {
         async create() {
             if (this.confirm) {
                 //add
-
-                await this.employeeViolationStore.addEmployeeViolation();
+                await this.pendingViolationStore.addPendingViolation();
 
                 if (!Object.keys(this.errors).length) {
                     this.dialog.open = true;
@@ -234,6 +250,15 @@ export default {
             //confirm first
             this.confirm = !this.confirm;
         },
+        hasPendingViolation(employeeId, violationId) {
+            return this.pendingViolations.find(
+                (el) =>
+                    el.employee.id === employeeId &&
+                    el.violation.id === violationId
+            )
+                ? true
+                : false;
+        },
     },
     computed: {
         violations() {
@@ -241,13 +266,29 @@ export default {
                 (vT) => vT.id === this.violationType
             )?.violations;
         },
+        activeEmployees() {
+            return this.employees.filter((e) => e.status === "active");
+        },
+        filteredSelected() {
+            return this.selected.filter((a) => {
+                return !this.pendingViolations.find((b) => {
+                    return (
+                        b.employee.id === a.id &&
+                        b.violation.id === this.form.violation_id
+                    );
+                });
+            });
+        },
     },
     watch: {
-        selected(newVal, oldVal) {
-            this.form.employee_id = this.selected.map((el) => {
+        filteredSelected(newVal, oldVal) {
+            this.form.employee_id = this.filteredSelected.map((el) => {
                 return el.id;
             });
         },
+    },
+    unmounted() {
+        this.pendingViolationStore.clearForm();
     },
 };
 </script>

@@ -5,21 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EmployeeViolation extends Model
+class PendingViolation extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'employee_id',
         'violation_id',
+        'document_link'
     ];
 
     protected $hidden = [
         'employee_id',
         'violation_id',
     ];
-
-
 
     public function employee()
     {

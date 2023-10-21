@@ -64,6 +64,11 @@ const routes = [
                 name: "violation",
                 component: () => import("@/Pages/Violation/Index.vue"),
             },
+            {
+                path: "pending-violation",
+                name: "pendingViolation",
+                component: () => import("@/Pages/PendingViolation/Index.vue"),
+            },
         ],
     },
     {
