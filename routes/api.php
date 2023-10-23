@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DisciplinaryActionController;
 use App\Http\Controllers\DisciplinaryMeasureController;
@@ -25,6 +26,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::get('/user-notifications', [AuthController::class, 'notifications']);
 
 Route::apiResource('department', DepartmentController::class);
 Route::apiResource('employee', EmployeeController::class);

@@ -39,7 +39,10 @@ export const useEmployeeViolationStore = defineStore("employeeViolations", {
 
                 return state.employeeViolations
                     .find((el) => {
-                        return el.employee.id === id;
+                        return (
+                            el.employee.id === id &&
+                            el.violation.id === violationId
+                        );
                     })
                     ?.violation.disciplinaryActions.find(
                         (a) => a.offense_no === count

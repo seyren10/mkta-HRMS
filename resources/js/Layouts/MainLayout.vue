@@ -52,14 +52,8 @@
             <v-app-bar-title>MKTA HRMS</v-app-bar-title>
 
             <Department />
-            <v-btn icon="">
-                <v-badge color="red" content="9">
-                    <v-icon>mdi-bell-outline</v-icon>
-                </v-badge>
-                <v-tooltip location="bottom" activator="parent"
-                    >Notifications</v-tooltip
-                >
-            </v-btn>
+
+            <Notification />
 
             <router-link :to="{ name: 'settings' }">
                 <v-btn icon="">
@@ -107,10 +101,11 @@ import { navLinkData } from "./navLinkData";
 import ProfileMenu from "./components/ProfileMenu.vue";
 import Department from "./components/Department.vue";
 import Spinner from "@/components/Spinner.vue";
+import Notification from "./components/Notification.vue";
 
 export default {
     data: () => ({ drawer: null, navLinkData }),
-    components: { ProfileMenu, Department, Spinner },
+    components: { ProfileMenu, Department, Spinner, Notification },
     watch: {
         $route() {
             console.log(this.$route.matched[1].name);
