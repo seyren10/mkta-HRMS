@@ -98,17 +98,41 @@
 
 <script>
 import { navLinkData } from "./navLinkData";
+import { useNotificationStore } from "@/stores/notificationStore";
+import { usePendingViolationStore } from "@/stores/pendingViolationStore";
+
 import ProfileMenu from "./components/ProfileMenu.vue";
 import Department from "./components/Department.vue";
 import Spinner from "@/components/Spinner.vue";
 import Notification from "./components/Notification.vue";
 
 export default {
+    setup() {
+        const notificationStore = useNotificationStore();
+        const pendingViolationStore = usePendingViolationStore();
+
+        return {
+            notificationStore,
+            pendingViolationStore,
+        };
+    },
     data: () => ({ drawer: null, navLinkData }),
     components: { ProfileMenu, Department, Spinner, Notification },
     watch: {
         $route() {
             console.log(this.$route.matched[1].name);
+        },
+    },
+    mounted() {
+        const tenMinutes = 1000 * 60 * 10;
+        this.pollServerEvery(tenMinutes);
+    },
+    methods: {
+        pollServerEvery(interval) {
+            setInterval(() => {
+                this.notificationStore.getNotifications();
+                this.pendingViolationStore.getPendingViolations();
+            }, interval);
         },
     },
 };

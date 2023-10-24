@@ -59,9 +59,7 @@ class PendingViolationController extends Controller
         if ($isSuccess) {
             DeletePendingViolations::dispatch($request->employee_id, Auth::user())->delay(now()->addSeconds(10));
         }
-
-        // auth()->user()->notify((new ViolationSuccess("tae"))->delay(now()->addSeconds(20)));
-
+        
         return response()->noContent();
     }
 
