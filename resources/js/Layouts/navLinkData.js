@@ -48,4 +48,11 @@ export const navLinkData = [
         icon: "mdi-file-edit-outline",
         iconSelect: "mdi-file-edit",
     },
+    {
+        path: { name: "log" },
+        title: "Logs",
+        value: "logs",
+        icon: "mdi-text-box-search-outline",
+        iconSelect: "mdi-text-box-search",
+    },
 ];

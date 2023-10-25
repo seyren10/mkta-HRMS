@@ -57,9 +57,9 @@ class PendingViolationController extends Controller
         $isSuccess = PendingViolation::insert($dataArray);
 
         if ($isSuccess) {
-            DeletePendingViolations::dispatch($request->employee_id, Auth::user())->delay(now()->addSeconds(10));
+            DeletePendingViolations::dispatch($request->employee_id, Auth::user())->delay(now()->addSeconds(20));
         }
-        
+
         return response()->noContent();
     }
 

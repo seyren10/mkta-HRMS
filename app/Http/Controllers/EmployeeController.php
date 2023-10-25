@@ -36,7 +36,6 @@ class EmployeeController extends Controller
                 'first_name' => 'required|string|max:20',
                 'last_name' => 'required|string|max:20',
                 'hired_date' => 'required|date',
-                'status' => ['required', Rule::in(['active', 'suspended', 'dismissed'])],
                 'department_id' => 'required|integer'
             ]),
         ]);

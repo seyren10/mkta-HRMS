@@ -6,6 +6,7 @@ use App\Http\Controllers\DisciplinaryActionController;
 use App\Http\Controllers\DisciplinaryMeasureController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EmployeeViolationController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PendingViolationController;
 use App\Http\Controllers\ViolationController;
 use App\Http\Controllers\ViolationTypeController;
@@ -26,7 +27,6 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::get('/user-notifications', [AuthController::class, 'notifications']);
 
 Route::apiResource('department', DepartmentController::class);
 Route::apiResource('employee', EmployeeController::class);
@@ -37,3 +37,9 @@ Route::apiResource('disciplinary-measure', DisciplinaryMeasureController::class)
 Route::apiResource('disciplinary-action', DisciplinaryActionController::class);
 Route::apiResource('violation-type', ViolationTypeController::class);
 Route::apiResource('violation', ViolationController::class);
+
+Route::controller(NotificationController::class)->group(function () {
+    Route::get('notification', 'index');
+    Route::put('notification/{notificationId}', 'markAsRead');
+    Route::put('notification', 'markAllAsRead');
+});

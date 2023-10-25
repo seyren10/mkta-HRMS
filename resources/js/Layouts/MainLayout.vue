@@ -11,14 +11,21 @@
                     :to="link.path"
                 >
                     <v-list-item
-                        :prepend-icon="
-                            this.$route.name === link.path.name
-                                ? link.iconSelect
-                                : link.icon
-                        "
                         :title="link.title"
                         :value="link.value"
-                    ></v-list-item>
+                        :class="{
+                            'bg-accent-light':
+                                $route.matched[1].name === link.path.name,
+                        }"
+                    >
+                        <template #prepend>
+                            <v-icon style="font-size: 1.8rem" class="">{{
+                                $route.matched[1].name === link.path.name
+                                    ? link.iconSelect
+                                    : link.icon
+                            }}</v-icon>
+                        </template>
+                    </v-list-item>
                 </router-link>
             </v-list>
 
@@ -118,11 +125,11 @@ export default {
     },
     data: () => ({ drawer: null, navLinkData }),
     components: { ProfileMenu, Department, Spinner, Notification },
-    watch: {
-        $route() {
-            console.log(this.$route.matched[1].name);
-        },
-    },
+    // watch: {
+    //     $route() {
+    //         console.log(this.$route.fullPath.split("/"));
+    //     },
+    // },
     mounted() {
         const tenMinutes = 1000 * 60 * 10;
         this.pollServerEvery(tenMinutes);

@@ -17,8 +17,6 @@ class ViolationTypeResource extends JsonResource
     {
         $data =  [
             ...parent::toArray($request),
-            'violation_type' => Str::of($this->violation_type)->headline(),
-
         ];
         if ($request->has('includeViolations')) {
             $data['violations'] = ViolationResource::collection($this->violations);

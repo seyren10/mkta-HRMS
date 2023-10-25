@@ -75,7 +75,7 @@
                     color="blue-lighten-1"
                     type="submit"
                     :loading="loading"
-                    >Create Item
+                    >Register Employee
                 </v-btn>
             </v-form>
         </v-container>

@@ -100,6 +100,39 @@ const routes = [
                     requiresAuth: true,
                 },
             },
+            {
+                path: "log",
+                name: "log",
+                component: () => import("@/Pages/Log/Index.vue"),
+                meta: {
+                    requiresAuth: true,
+                },
+                redirect: { name: "logPendingViolation" },
+                children: [
+                    {
+                        path: "pending-violation",
+                        name: "logPendingViolation",
+                        component: () =>
+                            import(
+                                "@/Pages/Log/components/PendingViolation.vue"
+                            ),
+                    },
+                    {
+                        path: "employee-violation",
+                        name: "logEmployeeViolation",
+                        component: () =>
+                            import(
+                                "@/Pages/Log/components/EmployeeViolation.vue"
+                            ),
+                    },
+                    {
+                        path: "employee",
+                        name: "logEmployee",
+                        component: () =>
+                            import("@/Pages/Log/components/Employee.vue"),
+                    },
+                ],
+            },
         ],
     },
     {

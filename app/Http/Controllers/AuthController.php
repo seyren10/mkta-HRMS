@@ -37,9 +37,4 @@ class AuthController extends Controller
             'message' => 'logout'
         ]);
     }
-
-    public function notifications()
-    {
-        return Auth::user()->notifications;
-    }
 }

@@ -41,10 +41,28 @@ export const useNotificationStore = defineStore("notifications", {
     actions: {
         async getNotifications() {
             try {
-                const res = await axios.get("/api/user-notifications");
+                const res = await axios.get("/api/notification");
                 this.notifications = res.data;
             } catch (e) {
-                // this.error = e.response.data.message;
+                this.error = e.response.data.message;
+            }
+        },
+        async markAsRead(notificationId) {
+            try {
+                await axios.put(`/api/notification/${notificationId}`);
+
+                await this.getNotifications();
+            } catch (e) {
+                this.error = e.response.data.message;
+            }
+        },
+        async markAllAsRead() {
+            try {
+                await axios.put(`/api/notification`);
+
+                await this.getNotifications();
+            } catch (e) {
+                this.error = e.response.data.message;
             }
         },
     },
