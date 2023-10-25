@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
 {
+
+
     /**
      * Display a listing of the resource.
      */

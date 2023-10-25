@@ -11,14 +11,21 @@
                     :to="link.path"
                 >
                     <v-list-item
-                        :prepend-icon="
-                            this.$route.name === link.path.name
-                                ? link.iconSelect
-                                : link.icon
-                        "
                         :title="link.title"
                         :value="link.value"
-                    ></v-list-item>
+                        :class="{
+                            'bg-accent-light':
+                                $route.matched[1].name === link.path.name,
+                        }"
+                    >
+                        <template #prepend>
+                            <v-icon style="font-size: 1.8rem" class="">{{
+                                $route.matched[1].name === link.path.name
+                                    ? link.iconSelect
+                                    : link.icon
+                            }}</v-icon>
+                        </template>
+                    </v-list-item>
                 </router-link>
             </v-list>
 
@@ -52,14 +59,8 @@
             <v-app-bar-title>MKTA HRMS</v-app-bar-title>
 
             <Department />
-            <v-btn icon="">
-                <v-badge color="red" content="9">
-                    <v-icon>mdi-bell-outline</v-icon>
-                </v-badge>
-                <v-tooltip location="bottom" activator="parent"
-                    >Notifications</v-tooltip
-                >
-            </v-btn>
+
+            <Notification />
 
             <router-link :to="{ name: 'settings' }">
                 <v-btn icon="">
@@ -104,16 +105,41 @@
 
 <script>
 import { navLinkData } from "./navLinkData";
+import { useNotificationStore } from "@/stores/notificationStore";
+import { usePendingViolationStore } from "@/stores/pendingViolationStore";
+
 import ProfileMenu from "./components/ProfileMenu.vue";
 import Department from "./components/Department.vue";
 import Spinner from "@/components/Spinner.vue";
+import Notification from "./components/Notification.vue";
 
 export default {
+    setup() {
+        const notificationStore = useNotificationStore();
+        const pendingViolationStore = usePendingViolationStore();
+
+        return {
+            notificationStore,
+            pendingViolationStore,
+        };
+    },
     data: () => ({ drawer: null, navLinkData }),
-    components: { ProfileMenu, Department, Spinner },
-    watch: {
-        $route() {
-            console.log(this.$route.matched[1].name);
+    components: { ProfileMenu, Department, Spinner, Notification },
+    // watch: {
+    //     $route() {
+    //         console.log(this.$route.fullPath.split("/"));
+    //     },
+    // },
+    mounted() {
+        const tenMinutes = 1000 * 60 * 10;
+        this.pollServerEvery(tenMinutes);
+    },
+    methods: {
+        pollServerEvery(interval) {
+            setInterval(() => {
+                this.notificationStore.getNotifications();
+                this.pendingViolationStore.getPendingViolations();
+            }, interval);
         },
     },
 };

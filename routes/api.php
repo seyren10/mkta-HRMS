@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DisciplinaryActionController;
 use App\Http\Controllers\DisciplinaryMeasureController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EmployeeViolationController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PendingViolationController;
 use App\Http\Controllers\ViolationController;
 use App\Http\Controllers\ViolationTypeController;
@@ -35,3 +37,9 @@ Route::apiResource('disciplinary-measure', DisciplinaryMeasureController::class)
 Route::apiResource('disciplinary-action', DisciplinaryActionController::class);
 Route::apiResource('violation-type', ViolationTypeController::class);
 Route::apiResource('violation', ViolationController::class);
+
+Route::controller(NotificationController::class)->group(function () {
+    Route::get('notification', 'index');
+    Route::put('notification/{notificationId}', 'markAsRead');
+    Route::put('notification', 'markAllAsRead');
+});

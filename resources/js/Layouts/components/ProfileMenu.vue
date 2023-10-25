@@ -1,7 +1,7 @@
 <template>
     <v-menu min-width="200px" rounded>
         <template v-slot:activator="{ props }">
-            <p class="text-caption text-secondary">Hi, Example User</p>
+            <p class="text-caption text-secondary">Hi, {{ user.name }}</p>
             <v-btn icon v-bind="props">
                 <v-avatar size="small" image="https://i.pravatar.cc/100?img=12">
                 </v-avatar>
@@ -16,7 +16,9 @@
                     <v-list-item prepend-icon="mdi-account-outline"
                         >Profile</v-list-item
                     >
-                    <v-list-item prepend-icon="mdi-logout">Logout</v-list-item>
+                    <v-list-item prepend-icon="mdi-logout" @click="logout"
+                        >Logout</v-list-item
+                    >
                 </v-list>
             </v-card-text>
         </v-card>
@@ -24,7 +26,21 @@
 </template>
 
 <script>
-export default {};
+import { useUserStore } from "@/stores/userStore";
+import { storeToRefs } from "pinia";
+export default {
+    async setup() {
+        const userStore = useUserStore();
+        await userStore.getUser();
+        const { user } = storeToRefs(userStore);
+        return { user, userStore };
+    },
+    methods: {
+        logout() {
+            this.userStore.logout();
+        },
+    },
+};
 </script>
 
 <style scoped></style>

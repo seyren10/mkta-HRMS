@@ -2,8 +2,14 @@
 
 namespace App\Console;
 
+use App\Models\PendingViolation;
+use App\Models\User;
+use App\Notifications\ViolationSuccess;
+use Exception;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 
 class Kernel extends ConsoleKernel
 {
@@ -12,7 +18,16 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->day
+        try {
+            // $schedule->command('inspire')->day
+            $schedule->call(function () {
+                $pendingViolations = PendingViolation::where('created_at', '<', now()->subSeconds(10))->get();
+                User::find(1)->notifications()->delete();
+                User::find(1)->notify(new ViolationSuccess($pendingViolations));
+            })->everyFiveSeconds();
+        } catch (Exception $e) {
+            Log::error('Scheduled task error:' . $e->getMessage());
+        }
     }
 
     /**

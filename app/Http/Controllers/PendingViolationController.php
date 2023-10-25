@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\PendingViolationResource;
-use App\Models\Employee;
-use App\Models\PendingViolation;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\PendingViolation;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use App\Notifications\ViolationSuccess;
+use Illuminate\Support\Facades\Notification;
+use App\Http\Resources\PendingViolationResource;
+use App\Jobs\DeletePendingViolations;
 
 class PendingViolationController extends Controller
 {
@@ -50,8 +54,13 @@ class PendingViolationController extends Controller
 
 
 
-        PendingViolation::insert($dataArray);
-        return response()->json();
+        $isSuccess = PendingViolation::insert($dataArray);
+
+        if ($isSuccess) {
+            DeletePendingViolations::dispatch($request->employee_id, Auth::user())->delay(now()->addSeconds(20));
+        }
+
+        return response()->noContent();
     }
 
     /**
