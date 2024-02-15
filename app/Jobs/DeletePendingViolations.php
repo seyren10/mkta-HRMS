@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Events\ViolationProcessed;
 use App\Http\Resources\PendingViolationResource;
 use App\Models\EmployeeViolation;
 use App\Models\Log;
@@ -54,10 +55,11 @@ class DeletePendingViolations implements ShouldQueue
                 $data->delete();
             }
 
-            Log::create([
-                'type' => 'pendingViolation',
-                'data' => json_encode(PendingViolationResource::collection($this->pendingViolations))
-            ]);
+            ViolationProcessed::dispatch($this->pendingViolations);
+            // Log::create([
+            //     'type' => 'pendingViolation',
+            //     'data' => json_encode(PendingViolationResource::collection($this->pendingViolations))
+            // ]);
 
 
             $this->user->notify(new ViolationSuccess($this->pendingViolations));
