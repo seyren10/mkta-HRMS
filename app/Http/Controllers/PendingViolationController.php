@@ -11,6 +11,7 @@ use App\Notifications\ViolationSuccess;
 use Illuminate\Support\Facades\Notification;
 use App\Http\Resources\PendingViolationResource;
 use App\Jobs\DeletePendingViolations;
+use Illuminate\Database\Eloquent\Collection;
 
 class PendingViolationController extends Controller
 {
@@ -43,22 +44,20 @@ class PendingViolationController extends Controller
             ])
         ];
 
-        $dataArray = array_map(function ($el, $i) use ($request) {
-            return [
-                'employee_id' => $el,
-                'violation_id' => $request->violation_id,
-                'created_at' => now(),
-                'updated_at' => now()
-            ];
-        }, $request->employee_id, array_keys($request->employee_id));
+        $storedPendingViolations = new Collection();
 
-
-
-        $isSuccess = PendingViolation::insert($dataArray);
-
-        if ($isSuccess) {
-            DeletePendingViolations::dispatch($request->employee_id, Auth::user())->delay(now()->addSeconds(20));
+        foreach ($request->employee_id as $key => $value) {
+            $storedPendingViolations
+                ->push(
+                    PendingViolation::create([
+                        'employee_id' => $value,
+                        'violation_id' => $request->violation_id
+                    ])
+                );
         }
+
+        DeletePendingViolations::dispatch($storedPendingViolations, Auth::user())->delay(now()->addSeconds(20));
+
 
         return response()->noContent();
     }

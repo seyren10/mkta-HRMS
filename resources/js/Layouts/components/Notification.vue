@@ -50,27 +50,18 @@
                         :key="notification.id"
                         class="mb-1 rounded text-grey border border"
                         :class="{ 'bg-accent-light': !notification.read_at }"
-                        :prepend-icon="
-                            notification.data.type === 'pendingViolation'
-                                ? 'mdi-delete-alert-outline'
-                                : 'mdi-bell-outline'
-                        "
                         @click="notificationStore.markAsRead(notification.id)"
                     >
                         <template #prepend>
                             <div class="mr-4">
                                 <v-icon style="font-size: 2rem">{{
-                                    notification.data.type ===
-                                    "pendingViolation"
-                                        ? "mdi-delete-alert-outline"
-                                        : "mdi-bell-outline"
+                                    notificationData.find(
+                                        (e) => e.type === notification.data.type
+                                    ).icon ?? "mdi-bell-outline"
                                 }}</v-icon>
                             </div>
                         </template>
-                        <div
-                            class="text-caption text-grey-darken-2"
-                            v-if="notification.data.type === 'pendingViolation'"
-                        >
+                        <div class="text-caption text-grey-darken-2">
                             <strong>{{
                                 getTruncatedFullNames(notification.id, 3)
                             }}</strong>
@@ -83,13 +74,28 @@
                                 </strong>
                                 other
                             </template>
+
                             <template
-                                v-if="notification.data.data.length > 1"
-                                >{{ " were " }}</template
+                                v-if="
+                                    notificationData.find(
+                                        (e) => e.type === notification.data.type
+                                    ).messageType === 'text'
+                                "
                             >
-                            <template v-else>{{ " was " }} </template>
-                            automatically rejected for failing to submit a
-                            response within a 5-day deadline.
+                                {{
+                                    notificationData.find(
+                                        (e) => e.type === notification.data.type
+                                    ).appendMessage
+                                }}
+                            </template>
+                            <span
+                                v-else
+                                v-html="
+                                    notificationData.find(
+                                        (e) => e.type === notification.data.type
+                                    ).appendMessage
+                                "
+                            ></span>
                             <span style="text-transform: capitalize">
                                 ({{
                                     notification.data.data.at(0).violation
@@ -152,6 +158,22 @@ export default {
     data() {
         return {
             filtered: false,
+            notificationData: [
+                {
+                    type: "pendingViolation",
+                    icon: "mdi-delete-alert-outline",
+                    messageType: "text",
+                    appendMessage:
+                        " were/was automatically rejected for failing to submit a response within a 5-day deadline.",
+                },
+                {
+                    type: "violationReminder",
+                    icon: "mdi-hand-front-right-outline",
+                    messageType: "raw",
+                    appendMessage:
+                        " failed to submit a response within a 5-day deadline. <strong>(Action needed)</strong>",
+                },
+            ],
         };
     },
     computed: {

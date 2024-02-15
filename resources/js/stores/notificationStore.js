@@ -16,13 +16,17 @@ export const useNotificationStore = defineStore("notifications", {
                 return notification.data.data
                     .reduce((acc, cur) => {
                         if (
-                            notification.data.type === "pendingViolation" &&
+                            ["pendingViolation", "violationReminder"].indexOf(
+                                notification.data.type
+                            ) !== -1 &&
                             notification.data.data.length >= limit
                         ) {
                             if (notification.data.data.indexOf(cur) < limit)
                                 acc.push(cur.employee.full_name);
                         } else if (
-                            notification.data.type === "pendingViolation"
+                            ["pendingViolation", "violationReminder"].indexOf(
+                                notification.data.type
+                            ) !== -1
                         ) {
                             acc.push(cur.employee.full_name);
                         }
