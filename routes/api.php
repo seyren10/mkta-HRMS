@@ -8,6 +8,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EmployeeViolationController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PendingViolationController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ViolationController;
 use App\Http\Controllers\ViolationTypeController;
 use Illuminate\Http\Request;
@@ -37,6 +38,10 @@ Route::apiResource('disciplinary-measure', DisciplinaryMeasureController::class)
 Route::apiResource('disciplinary-action', DisciplinaryActionController::class);
 Route::apiResource('violation-type', ViolationTypeController::class);
 Route::apiResource('violation', ViolationController::class);
+Route::controller(SettingController::class)->group(function () {
+    Route::get('setting', 'index');
+    Route::put('setting', 'update');
+});
 
 Route::controller(NotificationController::class)->group(function () {
     Route::get('notification', 'index');
