@@ -11,6 +11,8 @@ use App\Notifications\ViolationSuccess;
 use Illuminate\Support\Facades\Notification;
 use App\Http\Resources\PendingViolationResource;
 use App\Jobs\DeletePendingViolations;
+use App\Models\Employee;
+use App\Models\Violation;
 use Illuminate\Database\Eloquent\Collection;
 
 class PendingViolationController extends Controller
@@ -46,14 +48,28 @@ class PendingViolationController extends Controller
 
         $storedPendingViolations = new Collection();
 
-        foreach ($request->employee_id as $key => $value) {
-            $storedPendingViolations
-                ->push(
-                    PendingViolation::create([
-                        'employee_id' => $value,
-                        'violation_id' => $request->violation_id
-                    ])
-                );
+        $employees = Employee::whereIn('id', $request->employee_id)
+            ->withCount(['employeeViolations as filtered_violations_count' => function ($query) use ($request) {
+                $query->where('violation_id', $request->violation_id);
+            }])
+            ->get();
+
+        $violation = Violation::withCount('disciplinaryActions')->find($request->violation_id);
+
+        foreach ($employees as $employee) {
+            $employeeViolationCount = $employee->filtered_violations_count;
+
+
+            if ($employeeViolationCount >= $violation->disciplinary_actions_count) {
+                continue;
+            }
+
+            $storedPendingViolations->push(
+                PendingViolation::create([
+                    'employee_id' => $employee->id,
+                    'violation_id' => $request->violation_id,
+                ])
+            );
         }
 
         DeletePendingViolations::dispatch($storedPendingViolations, Auth::user())->delay(now()->addSeconds(20));

@@ -34,7 +34,6 @@ class ViolationController extends Controller
         $violation =  Violation::create(
             $request->validate([
                 'description' => 'required',
-                'action_length' => 'required|integer',
                 'violation_type_id' => 'required'
             ])
         );
@@ -78,12 +77,11 @@ class ViolationController extends Controller
         $violation->update(
             $request->validate([
                 'description' => 'required',
-                'action_length' => 'required|integer',
                 'violation_type_id' => 'required'
             ])
         );
         if ($violation) {
-            $updatedViolation = [];
+            $updatedViolation = []; 
             $updatedViolation = $violation->fresh();
 
             $data = array_map(function ($el, $i) use ($updatedViolation) {

@@ -1,100 +1,53 @@
 <template>
     <v-card>
         <v-toolbar color="accent-light">
-            <v-toolbar-title
-                ><Heading icon="mdi-account-alert-outline"
-                    >Assign Violation</Heading
-                ></v-toolbar-title
-            >
+            <v-toolbar-title>
+                <Heading icon="mdi-account-alert-outline">Assign Violation</Heading>
+            </v-toolbar-title>
             <v-btn @click="$emit('close')" icon="mdi-close"></v-btn>
         </v-toolbar>
         <v-card-text>
             <div class="row">
                 <section>
                     <div class="mb-4">
-                        <v-select
-                            variant="underlined"
-                            density="compact"
-                            label="Violation Type"
-                            prepend-icon="mdi-playlist-check"
-                            :items="violationTypes"
-                            item-title="violation_type"
-                            item-value="id"
-                            v-model="violationType"
-                            clearable
-                            @update:modelValue="form.violation_id = null"
-                        ></v-select>
-                        <v-autocomplete
-                            v-model="form.violation_id"
-                            variant="underlined"
-                            density="comfortable"
-                            label="Offense Description"
-                            prepend-icon="mdi-text"
-                            :items="violations"
-                            item-title="description"
-                            item-value="id"
-                            clearable
+                        <v-select variant="underlined" density="compact" label="Violation Type"
+                            prepend-icon="mdi-playlist-check" :items="violationTypes" item-title="violation_type"
+                            item-value="id" v-model="violationType" clearable
+                            @update:modelValue="form.violation_id = null"></v-select>
+                        <v-autocomplete v-model="form.violation_id" variant="underlined" density="comfortable"
+                            label="Offense Description" prepend-icon="mdi-text" :items="violations"
+                            item-title="description" item-value="id" clearable
                             :error="errors?.violaton_id ? true : false"
-                            :error-messages="errors?.violation_id"
-                        ></v-autocomplete>
+                            :error-messages="errors?.violation_id"></v-autocomplete>
                     </div>
                     <Heading icon="mdi-check-all">Select Employee(s)</Heading>
-                    <v-text-field
-                        v-model="search"
-                        append-icon="mdi-magnify"
-                        label="Search employee"
-                        density="compact"
-                        variant="underlined"
-                    />
-                    <VDataTable
-                        v-model="selected"
-                        :headers="headers"
-                        :items="activeEmployees"
-                        :search="search"
-                        return-object
-                        show-select
-                        style="font-size: 0.8rem"
-                        density="compact"
-                    >
+                    <v-text-field v-model="search" append-icon="mdi-magnify" label="Search employee" density="compact"
+                        variant="underlined" />
+                    <VDataTable v-model="selected" :headers="headers" :items="activeEmployees" :search="search"
+                        return-object show-select style="font-size: 0.8rem" density="compact">
                         <template v-slot:item.data-table-select="{ item }">
-                            <v-checkbox
-                                v-if="
-                                    !hasPendingViolation(
-                                        item.value.id,
-                                        this.form.violation_id
-                                    )
-                                "
-                                v-model="selected"
-                                :value="item.value"
-                                hide-details
-                                style="font-size: 0.8rem; margin-left: 0.3rem"
-                                color="primary"
-                                density="compact"
-                            />
+                            <v-checkbox v-if="
+                                !hasPendingViolation(
+                                    item.value.id,
+                                    this.form.violation_id
+                                ) && alreadyDismissed(item.value, this.form.violation_id)
+                            " v-model="selected" :value="item.value" hide-details
+                                style="font-size: 0.8rem; margin-left: 0.3rem" color="primary" density="compact" />
                         </template>
                         <template #item.attempts="{ item }">
-                            <NumericChip
-                                :number="
-                                    getEmployeeViolationAttempts(
-                                        item.value.id,
-                                        this.form.violation_id
-                                    )
-                                "
-                                size="small"
-                            />
+                            <NumericChip :number="getEmployeeViolationAttempts(
+                                item.value.id,
+                                this.form.violation_id
+                            )
+                                " size="small" />
                         </template>
                         <template #item.pendingViolation="{ item }">
-                            <v-chip
-                                size="small"
-                                class="text-caption"
-                                color="secondary"
-                                v-if="
-                                    hasPendingViolation(
-                                        item.value.id,
-                                        this.form.violation_id
-                                    )
-                                "
-                            >
+                            <v-chip size="small" class="text-caption" color="secondary" v-if="
+                                hasPendingViolation(
+                                    item.value.id,
+                                    this.form.violation_id
+                                )
+                            ">
                                 Has Pending Violation
                             </v-chip>
                         </template>
@@ -102,59 +55,29 @@
                 </section>
                 <div class="bg-accent-light rounded pa-2 d-flex flex-column">
                     <Heading icon="mdi-check-all">Selected Employee(s)</Heading>
-                    <VDataTable
-                        :headers="headers"
-                        :items="filteredSelected"
-                        return-object
-                        style="font-size: 0.8rem"
-                        density="compact"
-                    >
+                    <VDataTable :headers="headers" :items="filteredSelected" return-object style="font-size: 0.8rem"
+                        density="compact">
                         <template #column.attempts="props">
-                            <v-icon
-                                @click="
-                                    selected = [];
-                                    confirm = false;
-                                "
-                                >mdi-close-circle-multiple-outline</v-icon
-                            >
+                            <v-icon @click="
+                                selected = [];
+                            confirm = false;
+                            ">mdi-close-circle-multiple-outline</v-icon>
                         </template>
                         <template #item.attempts="{ item }">
-                            <v-icon @click="deleteSelected(item.value)"
-                                >mdi-close-circle-outline</v-icon
-                            >
+                            <v-icon @click="deleteSelected(item.value)">mdi-close-circle-outline</v-icon>
                         </template>
                     </VDataTable>
-                    <div
-                        class="mt-4 align-self-start mt-auto"
-                        v-if="selected.length"
-                    >
-                        <v-btn
-                            flat
-                            class="text-none"
-                            color="primary"
-                            :prepend-icon="
+                    <div class="mt-4 align-self-start mt-auto" v-if="filteredSelected.length">
+                        <v-btn flat class="text-none" color="primary" :prepend-icon="!confirm
+                            ? 'mdi-account-alert-outline'
+                            : 'mdi-check'
+                            " @click="create" :loading="loading">{{
                                 !confirm
-                                    ? 'mdi-account-alert-outline'
-                                    : 'mdi-check'
-                            "
-                            @click="create"
-                            :loading="loading"
-                            >{{
-                                !confirm
-                                    ? "Assign Violation"
+                                    ? 'Assign Violation'
                                     : "Click to Confirm"
-                            }}</v-btn
-                        >
-                        <v-btn
-                            v-if="confirm"
-                            @click="confirm = false"
-                            class="text-none ml-2"
-                            prepend-icon="mdi-cancel"
-                            color="red-lighten-2"
-                            flat
-                            :loading="loading"
-                            >Cancel</v-btn
-                        >
+                            }}</v-btn>
+                        <v-btn v-if="confirm" @click="confirm = false" class="text-none ml-2" prepend-icon="mdi-cancel"
+                            color="red-lighten-2" flat :loading="loading">Cancel</v-btn>
                     </div>
                 </div>
             </div>
@@ -162,16 +85,9 @@
     </v-card>
 
     <v-dialog width="700" v-model="dialog.open" persistent>
-        <Report
-            @close="$emit('close')"
-            :violation-type="
-                violationTypes.find((el) => el.id === violationType)
-            "
-            :violation="
-                violations.find((el) => el.id === this.form.violation_id)
-            "
-            :employees="filteredSelected"
-        />
+        <Report @close="$emit('close')" :violation-type="violationTypes.find((el) => el.id === violationType)
+            " :violation="violations.find((el) => el.id === this.form.violation_id)
+                " :employees="filteredSelected" />
     </v-dialog>
 </template>
 
@@ -259,6 +175,17 @@ export default {
                 ? true
                 : false;
         },
+        alreadyDismissed(employee, violationId) {
+            const violation = this.violationTypes.flatMap(vt => vt.violations)
+                .find(v => v.id === violationId);
+
+            const disciplinaryActionCount = violation?.disciplinaryActions.length;
+            const employeeViolationCount = employee.employeeViolations.filter(ev => {
+                return ev.violation.id === violationId
+            }).length;
+
+            return employeeViolationCount < disciplinaryActionCount;
+        },
     },
     computed: {
         violations() {
@@ -271,12 +198,7 @@ export default {
         },
         filteredSelected() {
             return this.selected.filter((a) => {
-                return !this.pendingViolations.find((b) => {
-                    return (
-                        b.employee.id === a.id &&
-                        b.violation.id === this.form.violation_id
-                    );
-                });
+                return !this.hasPendingViolation(a.id, this.form.violation_id) && this.alreadyDismissed(a, this.form.violation_id);
             });
         },
     },
